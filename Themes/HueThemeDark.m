@@ -325,6 +325,7 @@ greenish blue, turqois blue?
 	return [self backgroundColor];
 }
 
+// This causes the select to delete convo to look messed up
 - (id) conversationListSelectedCellColor {
 	return [self tintColor];
 }

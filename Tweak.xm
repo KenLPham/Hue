@@ -20,6 +20,7 @@
 #import "Hue.h"
 #import "Themes/HueThemeDark.h"
 #import "Themes/HueThemeStyle.h"
+#import "Themes/HueThemeBlack.h"
 
 // Transparent Background
 #import "Headers/SMSApplication.h"
@@ -89,10 +90,11 @@ UIBackgroundStyleDarkTranslucent
 		HueThemeDark *theme = [[%c(HueThemeDark) alloc] init];
 		return theme;
 	} else if ([theme() isEqual:@"theme_black"]) {
-
+		HueThemeBlack *theme = [[%c(HueThemeBlack) alloc] init];
+		return theme;
 	}
 
-	if (enableStyle()) {
+	if (enableStyle()) { // Stock Transparent
 		HueThemeStyle *theme = [[%c(HueThemeStyle) alloc] init];
 		return theme;
 	}
@@ -106,10 +108,11 @@ UIBackgroundStyleDarkTranslucent
 		HueThemeDark *theme = [[%c(HueThemeDark) alloc] init];
 		return theme;
 	} else if ([theme() isEqual:@"theme_black"]) {
-		
+		HueThemeBlack *theme = [[%c(HueThemeBlack) alloc] init];
+		return theme;
 	}
 
-	if (enableStyle()) {
+	if (enableStyle()) { // Stock Transparent
 		HueThemeStyle *theme = [[%c(HueThemeStyle) alloc] init];
 		return theme;
 	}
@@ -186,7 +189,7 @@ UIBackgroundStyleDarkTranslucent
 		[colors addObject:RecColor()];
 
 		return colors;
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		NSMutableArray *colors = [[NSMutableArray alloc] init];
 		[colors addObject:[UIColor grayColor]];
 
@@ -197,7 +200,7 @@ UIBackgroundStyleDarkTranslucent
 }
 
 - (id) gray_balloonTextColor {
-	return useCustomBubble() ? recTextColor() : ([theme() isEqual:@"theme_dark"] ? [UIColor whiteColor] : %orig);
+	return useCustomBubble() ? recTextColor() : (([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) ? [UIColor whiteColor] : %orig);
 }
 %end
 
@@ -207,7 +210,7 @@ UIBackgroundStyleDarkTranslucent
 // 2 = dark, readable, transparent
 // 4 = default
 - (void) setStyle:(long long)arg1 {
-	if ([theme() isEqual:@"theme_dark"]) {
+	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		%orig(2);
 	} else {
 		%orig;
@@ -220,7 +223,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) backgroundColor {
 	if (useCustomBubble()) {
 		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -234,7 +237,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) mediaBackgroundColor {
 	if (useCustomBubble()) {
 		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -246,7 +249,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) backgroundColor {
 	if (useCustomBubble()) {
 		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor lightGrayColor];
 	} else {
 		return %orig;
@@ -258,7 +261,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) color {
 	if (useCustomBubble()) {
 		return recTextColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
 	} else {
 		return %orig;
@@ -270,7 +273,7 @@ UIBackgroundStyleDarkTranslucent
 // 0 = light transparent
 // 1 = dark transparent
 - (void) _setBarStyle:(int)style {
-	if ([theme() isEqual:@"theme_dark"]) {
+	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		%orig(1);
 	} else {
 		%orig;
@@ -281,7 +284,7 @@ UIBackgroundStyleDarkTranslucent
 %hook CKAvatarTitleCollectionReusableView
 // 1 = gray, 2 = white, 4 = black (default)
 - (void) setStyle:(int)style {
-	if ([theme() isEqual:@"theme_dark"]) {
+	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		%orig(2);
 	} else {
 		%orig;
@@ -294,7 +297,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) bubbleColor {
 	if (useCustomBubble()) {
 		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -304,7 +307,7 @@ UIBackgroundStyleDarkTranslucent
 - (id) thinkingDotColor {
 	if (useCustomBubble()) {
 		return recTextColor();
-	} else if ([theme() isEqual:@"theme_dark"]) {
+	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
 	} else {
 		return %orig;
@@ -326,7 +329,7 @@ UIBackgroundStyleDarkTranslucent
 %hook CKNavigationBarCanvasView
 - (void) setTitleView:(UIView*)title {
 	if ([title isKindOfClass:[UILabel class]]) {
-		if ([theme() isEqual:@"theme_dark"]) {
+		if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 			UILabel *label = (UILabel*)title;
 			[label setTextColor:[UIColor whiteColor]];
 
@@ -345,14 +348,14 @@ UIBackgroundStyleDarkTranslucent
 %hook UIToolbar
 // 0 = white (default)
 - (NSInteger) barStyle {
-	return 1;
+	return ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) ? 1 : 0;
 }
 %end
 
 // Change the "To:" text color when composing a new message
 %hook MFHeaderLabelView
 + (id) _defaultColor {
-	if ([theme() isEqual:@"theme_dark"]) {
+	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
 	} else {
 		return %orig;

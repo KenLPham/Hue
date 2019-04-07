@@ -10,12 +10,12 @@
 }
 
 - (NSArray*) themeTitles {
-    NSArray *titles = @[@"Stock", @"Dark"];
+    NSArray *titles = @[@"Stock", @"Dark", @"Black (Beta)"];
     return titles;
 }
 
 - (NSArray*) themeValues {
-    NSArray *themes = @[@"theme_stock", @"theme_dark"];
+    NSArray *themes = @[@"theme_stock", @"theme_dark", @"theme_black"];
     return themes;
 }
 
