@@ -34,4 +34,3 @@ https://sn50repo.github.io/
 [HBang crew](https://github.com/hbang) for make [Cephei](https://github.com/hbang/libcephei) so I could make my settings look cool
 
 People that answer questions on [/r/jailbreakdevelopers](https://www.reddit.com/r/jailbreakdevelopers/)
-
