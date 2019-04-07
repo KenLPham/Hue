@@ -1,0 +1,2 @@
+@interface CKBrowserSwitcherFooterView : UIView
+@end

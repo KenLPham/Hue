@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key> 				<string>PSStaticTextCell</string>
+			<key>label</key> 				<string>Bubble View</string>
+		</dict>
+
+		<!-- Structure
+
+		Header: Recipient
+		Toggle: Use Gradient
+		Link: Base Color
+		Link: Secondary Color
+		Button: Add Color
+
+		- do the same above but have Header: Sender instead -
+
+		-->
+
+		<!-- <dict>
+			<key>cell</key> 				<string>PSLinkListCell</string>
+			<key>label</key> 				<string>Theme</string>
+			<key>detail</key> 				<string>PSListItemsController</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+
+			<key>key</key> 					<string>testKey</string>
+			<key>default</key> 				<integer>0</integer>
+
+			<key>titlesDataSource</key> 	<string>themeTitles</string>
+			<key>valuesDataSource</key> 	<string>themeValues</string>
+		</dict> -->
+
+		<dict>
+			<key>cell</key> 				<string>PSLinkListCell</string>
+			<key>label</key> 				<string>Theme</string>
+			<key>detail</key> 				<string>PSEditableListController</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+
+			<key>key</key> 					<string>testKey</string>
+			<key>default</key> 				<integer>0</integer>
+
+
+			<!-- <key>cellClass</key> 			<string>PFSimpleLiteColorCell</string>
+			<key>libcolorpicker</key>
+			<dict>
+				<key>defaults</key> 		<string>com.kayfam.hueprefs</string>
+				<key>key</key> 				<string>testKey</string>
+				<key>fallback</key> 		<string>#ffffff</string>
+				<key>alpha</key> 			<true/>
+			</dict> -->
+
+			<key>titlesDataSource</key> 	<string>themeTitles</string>
+			<key>valuesDataSource</key> 	<string>themeValues</string>
+		</dict>
+
+	</array>
+</dict>
+</plist>

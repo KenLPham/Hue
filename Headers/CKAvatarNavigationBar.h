@@ -1,0 +1,2 @@
+@interface CKAvatarNavigationBar : UINavigationBar
+@end

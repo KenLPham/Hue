@@ -1,0 +1,2 @@
+@interface LPLinkView : UIView
+@end

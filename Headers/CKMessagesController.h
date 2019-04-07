@@ -1,0 +1,2 @@
+@interface CKMessagesController: UIViewController
+@end

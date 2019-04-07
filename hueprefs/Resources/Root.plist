@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+
+		<!-- Title -->
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+			<key>headerCellClass</key> 		<string>HBImageTableCell</string>
+			<key>icon</key> 				<string>logo.png</string>
+		</dict>
+
+		<!-- Plug -->
+		<dict>
+			<key>cellClass</key> 			<string>HBTwitterCell</string>
+			<key>label</key> 				<string>Ken</string>
+			<key>user</key> 				<string>lilboipham</string>
+		</dict>
+
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+			<key>label</key> 				<string>Settings</string>
+		</dict>
+		<!-- Enable Tweak -->
+		<dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>default</key> 				<true/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>key</key> 					<string>enable</string>
+			<key>label</key> 				<string>Enabled</string>
+		</dict>
+		<!-- Apply Changes (Terminate MobileSMS) -->
+		<dict>
+            <key>cell</key>         	    <string>PSButtonCell</string>
+            <key>label</key>       		    <string>Apply Changes</string>
+            <key>action</key>      	   		<string>apply</string>
+        </dict>
+		<!-- Transparent NavBar and Keyboard -->
+		<!-- <dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>default</key> 				<true/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>key</key> 					<string>transparent</string>
+			<key>label</key> 				<string>Transparent Bars</string>
+		</dict> -->
+
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+			<key>label</key> 				<string>Customize</string>
+		</dict>
+		<!-- Main Theme -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkListCell</string>
+			<key>label</key> 				<string>Theme</string>
+			<key>detail</key> 				<string>PSListItemsController</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+
+			<key>key</key> 					<string>main_theme</string>
+			<key>default</key> 				<string>theme_stock</string>
+
+			<key>titlesDataSource</key> 	<string>themeTitles</string>
+			<key>valuesDataSource</key> 	<string>themeValues</string>
+		</dict>
+		<!-- Background Style -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkListCell</string>
+			<key>label</key> 				<string>Background Style</string>
+			<key>detail</key> 				<string>PSListItemsController</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+
+			<key>key</key> 					<string>background_style</string>
+			<key>default</key> 				<string>style_none</string>
+
+			<key>titlesDataSource</key> 	<string>styleTitles</string>
+			<key>valuesDataSource</key> 	<string>styleValues</string>
+		</dict>
+		<!-- Background -->
+		<!-- <dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>label</key> 				<string>Background Color</string>
+			<key>detail</key> 				<string>SelectorController</string>
+			<key>HUEBackground</key> 		<string>BGView</string>
+		</dict> -->
+		<!-- Tint Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>tint_color</string>
+			<key>label</key> 				<string>Tint Color</string>
+			<key>fallback</key> 			<string>FFFFFF</string>
+			<key>alpha</key> 				<false/>
+		</dict>
+		<!-- <dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>label</key> 				<string>Tint Color</string>
+			<key>detail</key> 				<string>SelectorController</string>
+			<key>HUETint</key> 				<string>TintView</string>
+		</dict> -->
+
+		<!-- Split Bubble Settings -->
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+		</dict>
+		<!-- Use custom IM colors for SMS -->
+		<dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>default</key> 				<false/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>key</key> 					<string>copy_im</string>
+			<key>label</key> 				<string>Use iMessage Colors for SMS</string>
+		</dict>
+		<!-- Enable user set colors -->
+		<dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>default</key> 				<false/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>key</key> 					<string>custom_bubble</string>
+			<key>label</key> 				<string>Custom Colors</string>
+		</dict>
+		<!-- IM Bubble Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>label</key> 				<string>iMessage Bubbles</string>
+			<key>detail</key> 				<string>BubbleController</string>
+		</dict>
+		<!-- SMS Bubble Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>label</key> 				<string>SMS Bubbles</string>
+			<key>detail</key> 				<string>SMSBubbleController</string>
+		</dict>
+		<!-- Recipient Bubble Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>rec_color</string>
+			<key>label</key> 				<string>Recipient Bubble</string>
+			<key>fallback</key> 			<string>AAAAAA</string>
+			<key>alpha</key> 				<false/>
+		</dict>
+
+		<!-- Text Color Group -->
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+		</dict>
+		<!-- IM Text Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>im_text_color</string>
+			<key>label</key> 				<string>iMessage Text Color</string>
+			<key>fallback</key> 			<string>FFFFFF</string>
+			<key>alpha</key> 				<false/>
+		</dict>
+		<!-- SMS Text Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>sms_text_color</string>
+			<key>label</key> 				<string>SMS Text Color</string>
+			<key>fallback</key> 			<string>FFFFFF</string>
+			<key>alpha</key> 				<false/>
+		</dict>
+		<!-- Recipient Text Color -->
+		<dict>
+			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>rec_text_color</string>
+			<key>label</key> 				<string>Recipient Text Color</string>
+			<key>fallback</key> 			<string>FFFFFF</string>
+			<key>alpha</key> 				<false/>
+		</dict>
+
+		<!-- Support -->
+		<dict>
+			<key>cell</key> 				<string>PSGroupCell</string>
+			<key>label</key> 				<string>Support</string>
+		</dict>
+		<!-- PayPal -->
+		<!-- https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TBB3GGAEF9GJA&amp;currency_code=USD&amp;source=url -->
+		<dict>
+			<key>cellClass</key> 			<string>HBLinkTableCell</string>
+			<key>label</key> 				<string>PayPal</string>
+			<key>subtitle</key> 			<string>Help feed me</string>
+			<key>url</key> 					<string>https://bit.ly/2FVyWNm</string>
+		</dict>
+		<!-- Source -->
+		<dict>
+			<key>cellClass</key> 			<string>HBLinkTableCell</string>
+			<key>label</key> 				<string>GitHub</string>
+			<key>subtitle</key> 			<string>Source Code</string>
+			<key>url</key> 					<string>https://github.com/KenLPham</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Hue Preferences</string>
+</dict>
+</plist>

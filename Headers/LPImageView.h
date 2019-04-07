@@ -1,0 +1,2 @@
+@interface LPImageView : UIView
+@end
