@@ -32,5 +32,6 @@ https://sn50repo.github.io/
 [Nepeta](https://github.com/Nepeta) for making [Notifica](https://github.com/Nepeta/Notifica) open source so I could find out how to make the respring button and learn Cephei
 
 [HBang crew](https://github.com/hbang) for make [Cephei](https://github.com/hbang/libcephei) so I could make my settings look cool
+
 People that answer questions on [/r/jailbreakdevelopers](https://www.reddit.com/r/jailbreakdevelopers/)
 
