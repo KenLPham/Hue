@@ -1,0 +1,2 @@
+@interface CKConversationListController: UIViewController
+@end

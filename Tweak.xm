@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>
+
 #import "Headers/CKTranscriptCollectionView.h"
 #import "Headers/IMTypingIndicatorLayer.h"
 
@@ -21,6 +23,8 @@
 #import "Themes/HueThemeDark.h"
 #import "Themes/HueThemeStyle.h"
 #import "Themes/HueThemeBlack.h"
+
+#import "Headers/CKConversationListController.h"
 
 // Transparent Background
 #import "Headers/SMSApplication.h"
@@ -47,15 +51,15 @@ UIBackgroundStyleDarkTranslucent
 %hook SMSApplication
 - (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
 	BOOL result = %orig;
+	NSString *style = [Hue style]; // @"style_none", @"style_trap", @"style_light", @"style_dark", @"style_tral"
 
-	// @"style_none", @"style_trap", @"style_light", @"style_dark", @"style_tral"
-	if ([style() isEqualToString:@"style_trap"]) {
+	if ([style isEqualToString:@"style_trap"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleTransparent];
-	} else if ([style() isEqualToString:@"style_light"]) {
+	} else if ([style isEqualToString:@"style_light"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleLightBlur];
-	} else if ([style() isEqualToString:@"style_dark"]) {
+	} else if ([style isEqualToString:@"style_dark"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleDarkBlur];
-	} else if ([style() isEqualToString:@"style_tral"]) {
+	} else if ([style isEqualToString:@"style_tral"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleDarkTranslucent];
 	}
 
@@ -79,6 +83,41 @@ UIBackgroundStyleDarkTranslucent
 }
 %end
 
+// Fix Search Results being unreadable
+%hook UISearchController
+- (void) viewDidLoad {
+	%orig;
+
+	UIBlurEffectStyle style = [[Hue theme] isEqual:@"theme_stock"] ? UIBlurEffectStyleLight : UIBlurEffectStyleDark;
+	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:style];
+    UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+
+    blurEffectView.frame = self.view.bounds;
+    blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[self.view insertSubview:blurEffectView atIndex:0];
+}
+%end
+
+// Hide list before seguing
+%hook CKConversationListController
+
+- (void) viewWillAppear:(BOOL)arg1 {
+	%orig;
+	
+	if (self.view) {
+		[self.view setHidden:NO];
+	}
+}
+
+- (void) viewWillDisappear:(BOOL)arg1 {
+	%orig;
+	
+	if (self.view) {
+		[self.view setHidden:YES];
+	}
+}
+%end
+
 %end // End of HueStyle group
 
 %group HueTheme
@@ -86,15 +125,16 @@ UIBackgroundStyleDarkTranslucent
 // Set Themes
 %hook CKUIBehaviorPhone
 - (id) theme {
-	if ([theme() isEqual:@"theme_dark"]) {
+	NSString *currentTheme = [Hue theme];
+	if ([currentTheme isEqual:@"theme_dark"]) {
 		HueThemeDark *theme = [[%c(HueThemeDark) alloc] init];
 		return theme;
-	} else if ([theme() isEqual:@"theme_black"]) {
+	} else if ([currentTheme isEqual:@"theme_black"]) {
 		HueThemeBlack *theme = [[%c(HueThemeBlack) alloc] init];
 		return theme;
 	}
 
-	if (enableStyle()) { // Stock Transparent
+	if ([Hue enableStyle]) { // Stock Transparent
 		HueThemeStyle *theme = [[%c(HueThemeStyle) alloc] init];
 		return theme;
 	}
@@ -104,15 +144,16 @@ UIBackgroundStyleDarkTranslucent
 
 %hook CKUIBehaviorPad
 - (id) theme {
-	if ([theme() isEqual:@"theme_dark"]) {
+	NSString *currentTheme = [Hue theme];
+	if ([currentTheme isEqual:@"theme_dark"]) {
 		HueThemeDark *theme = [[%c(HueThemeDark) alloc] init];
 		return theme;
-	} else if ([theme() isEqual:@"theme_black"]) {
+	} else if ([currentTheme isEqual:@"theme_black"]) {
 		HueThemeBlack *theme = [[%c(HueThemeBlack) alloc] init];
 		return theme;
 	}
 
-	if (enableStyle()) { // Stock Transparent
+	if ([Hue enableStyle]) { // Stock Transparent
 		HueThemeStyle *theme = [[%c(HueThemeStyle) alloc] init];
 		return theme;
 	}
@@ -120,6 +161,73 @@ UIBackgroundStyleDarkTranslucent
 	return %orig; // Stock
 }
 %end
+
+// Makes it render as a template so a tintColor can be used
+%hook CKConversationListStandardCell
+- (void) updateUnreadIndicatorWithImage:(UIImage*)arg1 {
+	UIImage *replacement = [arg1 imageWithRenderingMode:2];
+	%orig(replacement);
+}
+%end
+
+// Composing new message NavBar title color
+%hook CKNavigationBarCanvasView
+- (void) setTitleView:(UIView*)title {
+	if ([title isKindOfClass:[UILabel class]]) {
+		NSString *theme = [Hue theme];
+		if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
+			UILabel *label = (UILabel*)title;
+			[label setTextColor:[UIColor whiteColor]];
+
+			%orig(label);
+		} else {
+			%orig;
+		}
+	} else {
+		%orig;
+	}
+}
+%end
+
+%hook CKMessageEntryView
+// 0 = white, transparent
+// 1 = dark, unreadable, transparent
+// 2 = dark, readable, transparent
+// 4 = default
+- (void) setStyle:(long long)arg1 {
+	NSString *theme = [Hue theme];
+
+	if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
+		%orig(2);
+	} else {
+		%orig;
+	}
+}
+%end
+
+// Bar the the bottom of the screen when deleting conversations
+%hook UIToolbar
+// 0 = white (default)
+- (NSInteger) barStyle {
+	NSString *theme = [Hue theme];
+	return ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) ? 1 : 0;
+}
+%end
+
+%hook CKAvatarTitleCollectionReusableView
+// 1 = gray, 2 = white, 4 = black (default)
+- (void) setStyle:(int)style {
+	NSString *theme = [Hue theme];
+
+	if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
+		%orig(2);
+	} else {
+		%orig;
+	}
+}
+%end
+
+%end // End of HueTheme Group
 
 // %hook CKBalloonView
 // - (bool) isFilled {
@@ -156,76 +264,55 @@ UIBackgroundStyleDarkTranslucent
 // }
 // %end
 
+%group HueBubbles
+
+// Remove if possible
 %hook CKUITheme
 // Tint
 - (id) appTintColor {
-	return useCustomBubble() ? tintColor() : %orig;
+	return [Hue tintColor];
 }
 
 // IM Sender
 - (id) blue_balloonColors {
-	NSLog(@"blue balloon colors set");
-
-	NSArray *colorArray = IMSenderColors();
-	return (useCustomBubble() && colorArray) ? colorArray : %orig;
+	return [Hue imSenderColors];
 }
 
 - (id) blue_balloonTextColor {
-	return useCustomBubble() ? imTextColor() : %orig;
+	return [Hue imTextColor];
 }
 
 // SMS Sender
 - (id) green_balloonColors {
-	NSArray *colorArray = useIMBubble() ? IMSenderColors() : SMSSenderColors();
-	return (useCustomBubble() && colorArray) ? colorArray : %orig;
+	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
+	return colorArray;
 }
 
 - (id) green_balloonTextColor {
-	return useCustomBubble() ? smsTextColor() : %orig;
+	return [Hue smsTextColor];
 }
 
 // Recipient
 - (id) gray_balloonColors {
-	if (useCustomBubble()) {
-		NSMutableArray *colors = [[NSMutableArray alloc] init];
-		[colors addObject:RecColor()];
+	NSMutableArray *colors = [[NSMutableArray alloc] init];
+	[colors addObject:[Hue recColor]];
 
-		return colors;
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-		NSMutableArray *colors = [[NSMutableArray alloc] init];
-		[colors addObject:[UIColor grayColor]];
-
-		return colors;
-	} else {
-		return %orig;
-	}
+	return colors;
 }
 
 - (id) gray_balloonTextColor {
-	return useCustomBubble() ? recTextColor() : (([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) ? [UIColor whiteColor] : %orig);
-}
-%end
-
-%hook CKMessageEntryView
-// 0 = white, transparent
-// 1 = dark, unreadable, transparent
-// 2 = dark, readable, transparent
-// 4 = default
-- (void) setStyle:(long long)arg1 {
-	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-		%orig(2);
-	} else {
-		%orig;
-	}
+	return [Hue recTextColor];
 }
 %end
 
 // Theme Links and App bubbles
 %hook LPTheme
 - (id) backgroundColor {
-	if (useCustomBubble()) {
-		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -237,9 +324,11 @@ UIBackgroundStyleDarkTranslucent
 // }
 
 - (id) mediaBackgroundColor {
-	if (useCustomBubble()) {
-		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -249,9 +338,11 @@ UIBackgroundStyleDarkTranslucent
 
 %hook LPTapToLoadViewStyle
 - (id) backgroundColor {
-	if (useCustomBubble()) {
-		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor lightGrayColor];
 	} else {
 		return %orig;
@@ -261,35 +352,14 @@ UIBackgroundStyleDarkTranslucent
 
 %hook LPTextViewStyle
 - (id) color {
-	if (useCustomBubble()) {
-		return recTextColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recTextColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
 	} else {
 		return %orig;
-	}
-}
-%end
-
-%hook UINavigationBar
-// 0 = light transparent
-// 1 = dark transparent
-- (void) _setBarStyle:(int)style {
-	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-		%orig(1);
-	} else {
-		%orig;
-	}
-}
-%end
-
-%hook CKAvatarTitleCollectionReusableView
-// 1 = gray, 2 = white, 4 = black (default)
-- (void) setStyle:(int)style {
-	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-		%orig(2);
-	} else {
-		%orig;
 	}
 }
 %end
@@ -297,9 +367,11 @@ UIBackgroundStyleDarkTranslucent
 // Typing Indicator
 %hook IMTypingIndicatorLayer
 - (id) bubbleColor {
-	if (useCustomBubble()) {
-		return RecColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
 		return %orig;
@@ -307,9 +379,11 @@ UIBackgroundStyleDarkTranslucent
 }
 
 - (id) thinkingDotColor {
-	if (useCustomBubble()) {
-		return recTextColor();
-	} else if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
+	NSString *theme = [Hue theme];
+
+	if ([Hue useCustomColors]) {
+		return [Hue recTextColor];
+	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
 	} else {
 		return %orig;
@@ -317,78 +391,35 @@ UIBackgroundStyleDarkTranslucent
 }
 %end
 
-// Makes it render as a template so a tintColor can be used
-%hook CKConversationListStandardCell
-- (void) updateUnreadIndicatorWithImage:(UIImage*)arg1 {
-	UIImage *replacement = [arg1 imageWithRenderingMode:2];
-	%orig(replacement);
-}
-%end
-
-// ISSUE: Causes a crash when opening a conversation
-// Composing new message NavBar title color
-
-%hook CKNavigationBarCanvasView
-- (void) setTitleView:(UIView*)title {
-	if ([title isKindOfClass:[UILabel class]]) {
-		if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-			UILabel *label = (UILabel*)title;
-			[label setTextColor:[UIColor whiteColor]];
-
-			%orig(label);
-		} else {
-			%orig;
-		}
-	} else {
-		%orig;
-	}
-}
-%end
-
-
-// Bar the the bottom of the screen when deleting conversations
-%hook UIToolbar
-// 0 = white (default)
-- (NSInteger) barStyle {
-	return ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) ? 1 : 0;
-}
-%end
-
 // Change the "To:" text color when composing a new message
 %hook MFHeaderLabelView
 + (id) _defaultColor {
-	if ([theme() isEqual:@"theme_dark"] || [theme() isEqual:@"theme_black"]) {
-		return [UIColor whiteColor];
-	} else {
-		return %orig;
-	}
+	NSString *theme = [Hue theme];
+	return ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) ? [UIColor whiteColor] : %orig;
 }
 %end
 
 %hook MFModernAtomView
 // iMessage
 + (id) _defaultTintColor {
-	// if ([theme() isEqual:@"theme_dark"]) {
-	// 	return [UIColor purpleColor];
-	// } else {
-	// 	return %orig;
-	// }
-
-	return useCustomBubble() ? [IMSenderColors() lastObject] : %orig;
+	id tint = [[Hue imSenderColors] lastObject];
+	return [Hue useCustomColors] ? tint : %orig;
 }
 
 + (id) _SMSTintColor {
-	// if ([theme() isEqual:@"theme_dark"]) {
-	// 	return [UIColor colorWithRed:(48/255.0) green:(144/255.0) blue:(199/255.0) alpha:1.0];
-	// } else {
-	// 	return %orig;
-	// }
-
-	return useCustomBubble() ? [SMSSenderColors() lastObject] : %orig;
+	id tint = [[Hue smsSenderColors] lastObject];
+	return [Hue useCustomColors] ? tint : %orig;
 }
 %end
 
-%end // End of HueTheme Group
+// ISSUE: Fucks up animation
+// %hook UINavigationBar
+// - (bool) isTranslucent {
+// 	return ![[Hue theme] isEqual:@"theme_black"];
+// }
+// %end
+
+%end // End of HueBubbles Group
 
 // doesnt work
 // %hook CKEditableCollectionViewCell
@@ -434,11 +465,11 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 // Dividers
 // [UIColor colorWithRed:(69/255.0) green:(71/255.0) blue:(81/255.0) alpha:1.0];
-
 %group HueContact
 
 static NSString *recipient;
 
+// called after it is set
 %hook CKMessagesController
 // Get name of recipient [SUCCESS]
 - (id) currentConversation {
@@ -446,7 +477,7 @@ static NSString *recipient;
 
 	if (convo) {
 		recipient = [convo name];
-		NSLog(@"%@", recipient);
+		NSLog(@"[Hue] %@", recipient);
 	} else {
 		recipient = nil;
 	}
@@ -474,13 +505,31 @@ static NSString *recipient;
 				BOOL isSpringBoard = [processName isEqualToString:@"SpringBoard"];
 				BOOL isApplication = [executablePath rangeOfString:@"/Application/"].location != NSNotFound || [executablePath rangeOfString:@"/Applications/"].location != NSNotFound;
 
-				if (((isSpringBoard || isApplication) && [processName isEqualToString:@"MobileSMS"]) && isEnabled()) {
-					%init(HueTheme);
+				if (((isSpringBoard || isApplication) && [processName isEqualToString:@"MobileSMS"]) && [Hue isEnabled]) {
+					NSLog(@"[Hue] Hue is enabled, injecting into MobileSMS");
+
+					// Enable HueTheme Group
+					if (![[Hue theme] containsString:@"theme_stock"] || [Hue enableStyle]) {
+						NSLog(@"[Hue] Isn't using Stock theme, enabling HueTheme Group");
+						%init(HueTheme);
+					}
+
+					// Enable HueBubbles Group
+					if ([Hue useCustomColors]) {
+						NSLog(@"[Hue] Using Custom Colors, enabling HueBubbles Group");
+						%init(HueBubbles);
+					}
+
+					// Enable HueContact Group
 					if (1 == 0) { // lol
 						%init(HueContact);
 					}
 
-					if (enableStyle()) {
+					// %init(HueContact);
+
+					// Enable HueStyle Group
+					if ([Hue enableStyle]) {
+						NSLog(@"[Hue] Background style selected, enabling HueStyle Group");
 						%init(HueStyle);
 					}
 				}

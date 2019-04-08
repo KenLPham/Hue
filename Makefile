@@ -3,7 +3,7 @@ ARCHS = armv7 arm64
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Hue
-Hue_FILES = Tweak.xm $(wildcard Themes/*.m)
+Hue_FILES = Tweak.xm $(wildcard Themes/*.m) Hue.m
 
 Hue_FRAMEWORKS = UIKit MessageUI
 Hue_PRIVATE_FRAMEWORKS = LinkPresentation ChatKit

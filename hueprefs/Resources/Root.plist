@@ -26,10 +26,10 @@
 		<!-- Enable Tweak -->
 		<dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>
-			<key>default</key> 				<true/>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
 			<key>key</key> 					<string>enable</string>
 			<key>label</key> 				<string>Enabled</string>
+			<key>default</key> 				<false/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 		</dict>
 		<!-- Apply Changes (Terminate MobileSMS) -->
 		<dict>
@@ -37,11 +37,17 @@
             <key>label</key>       		    <string>Apply Changes</string>
             <key>action</key>      	   		<string>apply</string>
         </dict>
+        <!-- Respring -->
+        <dict>
+            <key>cell</key>         	    <string>PSButtonCell</string>
+            <key>label</key>       		    <string>Respring (Recommended)</string>
+            <key>action</key>      	   		<string>respring</string>
+        </dict>
 		<!-- Transparent NavBar and Keyboard -->
 		<!-- <dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>
 			<key>default</key> 				<true/>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>key</key> 					<string>transparent</string>
 			<key>label</key> 				<string>Transparent Bars</string>
 		</dict> -->
@@ -55,7 +61,7 @@
 			<key>cell</key> 				<string>PSLinkListCell</string>
 			<key>label</key> 				<string>Theme</string>
 			<key>detail</key> 				<string>PSListItemsController</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 
 			<key>key</key> 					<string>main_theme</string>
 			<key>default</key> 				<string>theme_stock</string>
@@ -68,7 +74,7 @@
 			<key>cell</key> 				<string>PSLinkListCell</string>
 			<key>label</key> 				<string>Background Style</string>
 			<key>detail</key> 				<string>PSListItemsController</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 
 			<key>key</key> 					<string>background_style</string>
 			<key>default</key> 				<string>style_none</string>
@@ -87,11 +93,11 @@
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
 			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
 			<key>key</key> 					<string>tint_color</string>
 			<key>label</key> 				<string>Tint Color</string>
-			<key>fallback</key> 			<string>FFFFFF</string>
+			<key>fallback</key> 			<string>007aff</string>
 			<key>alpha</key> 				<false/>
 		</dict>
 		<!-- <dict>
@@ -109,7 +115,7 @@
 		<dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>
 			<key>default</key> 				<false/>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>key</key> 					<string>copy_im</string>
 			<key>label</key> 				<string>Use iMessage Colors for SMS</string>
 		</dict>
@@ -117,32 +123,42 @@
 		<dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>
 			<key>default</key> 				<false/>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>key</key> 					<string>custom_bubble</string>
 			<key>label</key> 				<string>Custom Colors</string>
 		</dict>
 		<!-- IM Bubble Color -->
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSGradientDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>im_sender_colors</string>
 			<key>label</key> 				<string>iMessage Bubbles</string>
-			<key>detail</key> 				<string>BubbleController</string>
+			<key>fallback</key> 			<string>4286f4,639eff</string>
+			<key>alpha</key> 				<true/>
 		</dict>
 		<!-- SMS Bubble Color -->
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
+			<key>cellClass</key> 			<string>CSGradientDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
+			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
+			<key>key</key> 					<string>sms_sender_colors</string>
 			<key>label</key> 				<string>SMS Bubbles</string>
-			<key>detail</key> 				<string>SMSBubbleController</string>
+			<key>fallback</key> 			<string>2fd63f,3df74f</string>
+			<key>alpha</key> 				<true/>
 		</dict>
 		<!-- Recipient Bubble Color -->
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
 			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
 			<key>key</key> 					<string>rec_color</string>
 			<key>label</key> 				<string>Recipient Bubble</string>
 			<key>fallback</key> 			<string>AAAAAA</string>
-			<key>alpha</key> 				<false/>
+			<key>alpha</key> 				<true/>
 		</dict>
 
 		<!-- Text Color Group -->
@@ -153,7 +169,7 @@
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
 			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
 			<key>key</key> 					<string>im_text_color</string>
 			<key>label</key> 				<string>iMessage Text Color</string>
@@ -164,7 +180,7 @@
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
 			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
 			<key>key</key> 					<string>sms_text_color</string>
 			<key>label</key> 				<string>SMS Text Color</string>
@@ -175,7 +191,7 @@
 		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
 			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
-			<key>defaults</key> 			<string>com.kayfam.hueprefs</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 			<key>defaultsPath</key> 		<string>/Library/PreferenceBundles/HuePrefs.bundle</string>
 			<key>key</key> 					<string>rec_text_color</string>
 			<key>label</key> 				<string>Recipient Text Color</string>

@@ -1,14 +1,15 @@
-//#import <libcolorpicker.h>
 #include <CSColorPicker/CSColorPicker.h>
 
-#define kPrefsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.plist"
+#define kPrefsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.new.plist"
 #define kPrefsChanged "com.kayfam.hueprefs/settingschanged"
 
 // Settings keys
 #define kPrefsEnabled @"enable"
+
+// not implemented
 #define kPrefsTransparent @"transparent"
 
-// color keys
+// theme keys
 #define kMainTheme @"main_theme"
 
 #define kStyle @"background_style"
@@ -28,125 +29,41 @@
 
 // not implemented
 #define kBackgroundColor @"bg_color"
+
 #define kTintColor @"tint_color"
 
 static NSDictionary *storage;
 
-// methods
-NSDictionary* dictionary () {
-	if (!storage) {
-		storage = [NSDictionary dictionaryWithContentsOfFile:kPrefsPlistPath];
-	}
-	return storage;
-}
+@interface Hue: NSObject
++ (NSDictionary*) dictionary;
 
-inline bool getPrefBool (NSString *key) {
-	//return [[dictionary() valueForKey:key] boolValue];
-	return [[[NSDictionary dictionaryWithContentsOfFile:kPrefsPlistPath] valueForKey:key] boolValue];
-}
++ (NSString*) getPrefObject:(NSString*)key;
++ (BOOL) getPrefBool:(NSString*)key;
 
-NSString* getPrefObject (NSString *key) {
-	// return [dictionary() objectForKey:key];
-	return [[NSDictionary dictionaryWithContentsOfFile:kPrefsPlistPath] objectForKey:key];
-}
++ (NSString*) theme;
++ (NSString*) style;
 
-NSString* theme () {
-	return getPrefObject(kMainTheme);
-}
++ (BOOL) isEnabled;
++ (BOOL) enableStyle;
 
-NSString* style () {
-	return getPrefObject(kStyle);
-}
++ (BOOL) makeTransparent; // not implemented
 
-inline bool isEnabled () {
-	return getPrefBool(kPrefsEnabled);
-}
++ (BOOL) useIMBubble;
++ (BOOL) useCustomColors;
 
-inline bool enableStyle () {
-	return ![style() isEqual:@"style_none"];
-}
+// + (UIColor*) getColor:(NSString*)key;
++ (UIColor*) getColor:(NSString*)key fallback:(NSString*)fall;
 
-inline bool makeTransparent () {
-	return getPrefBool(kPrefsTransparent);
-}
++ (UIColor*) tintColor;
 
-inline bool useIMBubble () {
-	return getPrefBool(kCopyIMColor);
-}
++ (UIColor*) imTextColor;
++ (UIColor*) smsTextColor;
++ (UIColor*) recTextColor;
 
-inline bool useCustomBubble () {
-	return getPrefBool(kCustomBubble);
-}
++ (UIColor*) recColor;
 
-// remove
-UIColor* getColorOld (NSString *key, NSString *fallback) {
-	NSString *hex = getPrefObject(key);
-	//return LCPParseColorString(hex, fallback); // libcolorpicker
-	return [UIColor colorFromHexString:hex]; // CSColorPicker
-}
++ (NSArray*) senderColors:(NSString*)key fallback:(NSString*)hex;
++ (NSArray*) imSenderColors;
++ (NSArray*) smsSenderColors;
 
-UIColor* getColor (NSString *key) {
-	NSString *hex = getPrefObject(key);
-	return [UIColor colorFromHexString:hex]; // CSColorPicker
-}
-
-// remove
-UIColor* testColor () {
-	return getColorOld(@"testKey", @"#ff0000");
-}
-
-// not implemented
-UIColor* backgroundColor () {
-	return getColorOld(kBackgroundColor, @"#ffffff");
-}
-
-UIColor* tintColor () {
-	return getColor(kTintColor);
-}
-
-UIColor* imTextColor () {
-	return getColor(kIMTextColor);
-}
-
-UIColor* smsTextColor () {
-	return getColor(kSMSTextColor);
-}
-
-UIColor* recTextColor () {
-	return getColor(kRecTextColor);
-}
-
-NSArray* senderColors (NSString *key) {
-	NSString *jsonString = getPrefObject(key);
-	NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-
-	if (data) {
-		NSError *error = nil;
-		NSArray *hexArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-
-		if (!error) {
-			NSMutableArray *colorsArray = [[NSMutableArray alloc] init];
-
-			for (NSString *hex in hexArray) {
-				[colorsArray addObject:[UIColor colorFromHexString:hex]];
-			}
-
-			return colorsArray;
-		}
-		return nil;
-	} else {
-		return nil;
-	}
-}
-
-UIColor* RecColor () {
-	return getColor(kRecColor);
-}
-
-NSArray* IMSenderColors () {
-	return senderColors(kIMSenderColor);
-}
-
-NSArray *SMSSenderColors () {
-	return senderColors(kSMSSenderColor);
-}
+@end

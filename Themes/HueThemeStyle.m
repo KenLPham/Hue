@@ -6,16 +6,11 @@
 - (id) backgroundColor {
 	return [UIColor clearColor];
 }
-
-// - (id) tintColor {
-// 	// return [UIColor purpleColor];
-// 	return tintColor();
-// }
 // end custom
 
-// - (id) appTintColor {
-// 	return [self tintColor];
-// }
+- (id) appTintColor {
+	return [Hue tintColor];
+}
 
 - (id) messageAcknowledgmentBalloonBorderColor {
 	return [UIColor clearColor];
@@ -62,9 +57,9 @@
 }
 
 // Conversation List
-// - (id) conversationListSelectedCellColor {
-// 	return [self tintColor];
-// }
+- (id) conversationListSelectedCellColor {
+	return [Hue tintColor];
+}
 
 - (id) conversationListSenderColor {
 	return [UIColor blackColor];

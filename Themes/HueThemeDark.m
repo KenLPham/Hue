@@ -3,17 +3,21 @@
 @implementation HueThemeDark
 // start custom
 - (id) backgroundColor {
-	return [style() isEqualToString:@"style_none"] ? [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:1.0] : [UIColor clearColor];
-}
-
-- (id) tintColor {
-	// return [UIColor purpleColor];
-	return tintColor();
+	return [Hue enableStyle] ? [UIColor clearColor] : [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:1.0];
 }
 // end custom
 
 - (id) appTintColor {
-	return [self tintColor];
+	return [Hue useCustomColors] ? [Hue tintColor] : [super appTintColor];
+}
+
+// IM
+- (id) blue_balloonColors {
+	return [Hue useCustomColors] ? [Hue imSenderColors] : [super blue_balloonColors];
+}
+
+- (id) blue_balloonTextColor {
+	return [Hue useCustomColors] ? [Hue imTextColor] : [UIColor whiteColor];
 }
 
 - (id) blue_balloonTextLinkColor {
@@ -21,7 +25,7 @@
 }
 
 - (id) blue_waveformColor {
-	return [UIColor whiteColor];
+	return [self blue_balloonTextColor];
 }
 
 /* Personal Theme
@@ -40,37 +44,44 @@ greenish blue, turqois blue?
 - (id)gray_sendButtonColor;
 */
 
-// Using gradients makes attachment balloons have a skinny mask
-// - (id) gray_balloonColors {
-// 	if (getPrefBool(kCustomBubble)) { //getPrefBool(kCustomBubble) useCustomBubble()
-// 		NSMutableArray *colors = [[NSMutableArray alloc] init];
-// 		[colors addObject:RecColor()];
+// Recipient
+- (id) gray_balloonColors {
+	if ([Hue useCustomColors]) {
+		NSMutableArray *colors = [[NSMutableArray alloc] init];
+		[colors addObject:[Hue recColor]];
+		return colors;
+	} else {
+		NSMutableArray *colors = [[NSMutableArray alloc] init];
+		[colors addObject:[UIColor grayColor]];
+		return colors;
+	}
+}
 
-// 		return colors;
-// 	} else {
-// 		NSMutableArray *colors = [[NSMutableArray alloc] init];
-// 		[colors addObject:[UIColor grayColor]];
-
-// 		return colors;
-// 	}
-// }
+- (id) gray_balloonTextColor {
+	return [Hue useCustomColors] ? [Hue recTextColor] : [UIColor whiteColor];
+}
 
 - (id) gray_balloonTextLinkColor {
 	return [self gray_balloonTextColor];
 }
 
-// - (id) gray_balloonOverlayColor {
-// 	return [UIColor redColor];
-// }
-
-// doesnt do anything?
 - (id) gray_waveformColor {
-	return [UIColor whiteColor];
+	return [self gray_balloonTextColor];
 }
 
 // For attachment balloons (gray_balloonColors overrides this)
 - (id) gray_unfilledBalloonColor {
 	return [UIColor grayColor];
+}
+
+// SMS
+- (id) green_balloonColors {
+	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
+	return [Hue useCustomColors] ? colorArray : [super green_balloonColors];
+}
+
+- (id) green_balloonTextColor {
+	return [Hue useCustomColors] ? [Hue smsTextColor] : [UIColor whiteColor];
 }
 
 - (id) green_balloonTextLinkColor {
@@ -80,7 +91,7 @@ greenish blue, turqois blue?
 // White bubbles are the animated ones that you see when send a message
 - (id) white_balloonColors {
 	NSMutableArray *colors = [[NSMutableArray alloc] init];
-	[colors addObject:[self backgroundColor]]; // clearColor when background is translucent
+	[colors addObject:[self backgroundColor]];
 
 	return colors;
 }
@@ -213,11 +224,7 @@ greenish blue, turqois blue?
 }
 
 // useless
-- (long long) entryViewStyle {
-	return 1;
-}
-
-// - (long long) HUDStyle {
+// - (long long) entryViewStyle {
 // 	return 1;
 // }
 
@@ -277,8 +284,7 @@ greenish blue, turqois blue?
 	return [self backgroundColor];
 }
 
-// Contact NavBar?
-
+// idk
 - (id) contactCellTextColor {
 	return [UIColor whiteColor];
 }
@@ -300,7 +306,6 @@ greenish blue, turqois blue?
 }
 
 // Conversation List
-
 - (id) conversationListSenderColor {
 	return [UIColor whiteColor];
 }
@@ -317,23 +322,49 @@ greenish blue, turqois blue?
 	return [UIColor whiteColor];
 }
 
+// also changes the conversationsearchtableview ... thanks apple...
 - (id) conversationListBackgroundColor {
 	return [self backgroundColor];
 }
 
 - (id) conversationListCellColor {
+	// return [Hue enableStyle] ? [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:0.5] : [self backgroundColor];
 	return [self backgroundColor];
 }
 
+// Contact TableView when Composing a new chat
+/*
+- (id)searchResultsBackgroundColor {
+	return [UIColor redColor];
+}
+
+- (id)searchResultsCellBackgroundColor {
+	return [UIColor blueColor];
+}
+
+- (id)searchResultsCellSelectedColor {
+	return [UIColor greenColor];
+}
+
+- (id)searchResultsSeperatorColor {
+	return [UIColor yellowColor];
+}
+*/
+
 // This causes the select to delete convo to look messed up
 - (id) conversationListSelectedCellColor {
-	return [self tintColor];
+	return [Hue useCustomColors] ? [Hue tintColor] : [super conversationListSelectedCellColor];
 }
 
 // what the fuck does this do
-- (long long) defaultBarStyle {
-	return 0;
+// - (long long) defaultBarStyle {
+// 	return 1;
+// }
+
+- (long long) navBarStyle {
+	return 1;
 }
+
 
 - (long long) statusBarStyle {
 	return 1;

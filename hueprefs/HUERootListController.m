@@ -34,7 +34,14 @@
 - (void) apply {
     NSTask *task = [[[NSTask alloc] init] autorelease];
     [task setLaunchPath:@"/usr/bin/killall"];
-    [task setArguments:[NSArray arrayWithObjects:@"MobileSMS", nil]];
+    [task setArguments:@[@"MobileSMS"]];
+    [task launch];
+}
+
+- (void) respring {
+    NSTask *task = [[[NSTask alloc] init] autorelease];
+    [task setLaunchPath:@"/usr/bin/killall"];
+    [task setArguments:@[@"backboardd"]];
     [task launch];
 }
 
