@@ -2,3 +2,4 @@ packages/
 .theos/
 *.deb
 .DS_Store
+Headers/.DS_Store

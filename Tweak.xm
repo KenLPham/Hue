@@ -9,7 +9,7 @@
 
 #import "Headers/CKBalloonView.h"
 
-#import "CKUITheme.h"
+#import "Headers/CKUITheme.h"
 #import "Headers/LPTheme.h"
 
 #import "Headers/LPLinkView.h"
@@ -164,6 +164,8 @@ UIBackgroundStyleDarkTranslucent
 
 // IM Sender
 - (id) blue_balloonColors {
+	NSLog(@"blue balloon colors set");
+
 	NSArray *colorArray = IMSenderColors();
 	return (useCustomBubble() && colorArray) ? colorArray : %orig;
 }
@@ -435,20 +437,22 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 %group HueContact
 
-%hook CKMessagesController
+static NSString *recipient;
 
+%hook CKMessagesController
 // Get name of recipient [SUCCESS]
 - (id) currentConversation {
 	CKConversation *convo = %orig;
 
-	// if convo is nil, make recipient nil
-
-	NSString *recipient = [convo name];
-	NSLog(@"%@", recipient);
+	if (convo) {
+		recipient = [convo name];
+		NSLog(@"%@", recipient);
+	} else {
+		recipient = nil;
+	}
 
 	return %orig;
 }
-
 %end
 
 %end // End of HueContact group

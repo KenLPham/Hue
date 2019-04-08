@@ -1,7 +1,7 @@
 Package: com.kayfam.hue
 Name: Hue
-Depends: mobilesubstrate, ws.hbang.common (>= 1.11)
-Version: 0.0.2
+Depends: mobilesubstrate, ws.hbang.common (>= 1.11), com.creaturesurvive.libcscolorpicker
+Version: 0.0.3
 Architecture: iphoneos-arm
 Description: Customize the shit outta Messages like you made it
 Maintainer: KayFam

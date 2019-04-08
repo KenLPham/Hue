@@ -1,3 +1,5 @@
+ARCHS = armv7 arm64
+
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = HuePrefs
@@ -7,8 +9,7 @@ HuePrefs_INSTALL_PATH = /Library/PreferenceBundles
 HuePrefs_FRAMEWORKS = UIKit
 HuePrefs_PRIVATE_FRAMEWORKS = Preferences
 
-HuePrefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
-#HuePrefs_LIBRARIES = colorpicker
+HuePrefs_EXTRA_FRAMEWORKS = CepheiPrefs
 HuePrefs_LDFLAGS = -lCSColorPicker
 
 include $(THEOS_MAKE_PATH)/bundle.mk

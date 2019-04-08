@@ -37,7 +37,10 @@
 
 - (void) addCell {
 	// Create title
-	long index = [_specifiers count] - 4;
+	// long index = [_specifiers count] - 4;
+	// NSArray *keys = [colors allKeys];
+	NSString *lastCell = [[colors allKeys] lastObject];
+	long index = [[lastCell stringByReplacingOccurrencesOfString:@"Color " withString:@""] intValue] + 1;
 	NSString *cellName = [NSString stringWithFormat:@"Color %ld", index];
 
 	// Create new cell
@@ -157,8 +160,9 @@
 }
 
 - (void) tableView:(id)arg1 commitEditingStyle:(UITableViewCellEditingStyle)arg2 forRowAtIndexPath:(NSIndexPath*)arg3 {
+	NSIndexPath *corrected = [NSIndexPath indexPathForRow:arg3.row + 1 inSection:arg3.section];
 	if (arg2 == UITableViewCellEditingStyleDelete) {
-		[self remove:_specifiers[arg3.row]];
+		[self remove:_specifiers[corrected.row]];
 	}
 	[super tableView:arg1 commitEditingStyle:arg2 forRowAtIndexPath:arg3];
 }

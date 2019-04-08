@@ -17,6 +17,10 @@
 // 	return [self tintColor];
 // }
 
+- (id) messageAcknowledgmentBalloonBorderColor {
+	return [UIColor clearColor];
+}
+
 - (id) transcriptBackgroundColor {
 	return [self backgroundColor];
 }

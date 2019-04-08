@@ -1,5 +1,4 @@
-#import "../CKUITheme.h"
-// #import "../Hue.h"
+#import "HueThemeBase.h"
 
-@interface HueThemeStyle : CKUITheme
+@interface HueThemeStyle : HueThemeBase
 @end
