@@ -1,4 +1,4 @@
-#import "HueThemeBase.h"
+#import "HueThemeDark.h"
 
-@interface HueThemeBlack: HueThemeBase
+@interface HueThemeBlack: HueThemeDark
 @end

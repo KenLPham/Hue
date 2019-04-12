@@ -1,32 +1,83 @@
 #import "HueThemeDark.h"
 
 @implementation HueThemeDark
-// start custom
-- (id) backgroundColor {
-	return [Hue enableStyle] ? [UIColor clearColor] : [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:1.0];
-}
-// end custom
-
-- (id) appTintColor {
-	return [Hue useCustomColors] ? [Hue tintColor] : [super appTintColor];
+// MARK: Hue
+- (id) themeBackground {
+	return [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:1.0];
 }
 
-// IM
+- (id) themeIMText {
+	return [UIColor whiteColor];
+}
+
+- (id) themeRecvrText {
+	return [UIColor whiteColor];
+}
+
+- (id) themeSMSText {
+	return [UIColor whiteColor];
+}
+
+- (id) themeAppTint {
+	return nil;
+}
+
+- (NSArray*) themeIMGradient {
+	return nil;
+}
+
+- (NSArray*) themeSMSGradient {
+	return nil;	
+}
+
+- (NSArray*) themeRecvrGradient {
+	return @[ [UIColor grayColor] ];
+}
+
+- (id) themeDarkText {
+	return [UIColor whiteColor];
+}
+
+- (id) themeSubText {
+	return [UIColor whiteColor];
+}
+
+// MARK: CKUITheme
+
+// TODO: Remove
+/*
 - (id) blue_balloonColors {
-	return [Hue useCustomColors] ? [Hue imSenderColors] : [super blue_balloonColors];
+
+	NSString *contact = [Hue getContact];
+	if (contact) {
+		if ([contact containsString:@"Matthew Perez"]) {
+
+			NSMutableArray *colors = [[NSMutableArray alloc] init];
+			[colors addObject:[UIColor blueColor]];
+			[colors addObject:[UIColor purpleColor]];
+			return colors;
+		}
+	}
+
+	return [super blue_balloonColors];
 }
 
+// TODO: Remove
 - (id) blue_balloonTextColor {
-	return [Hue useCustomColors] ? [Hue imTextColor] : [UIColor whiteColor];
-}
+	NSString *contact = [Hue getContact];
 
-- (id) blue_balloonTextLinkColor {
-	return [self blue_balloonTextColor];
-}
+	// Works
+	if (contact) {
+		// check name
 
-- (id) blue_waveformColor {
-	return [self blue_balloonTextColor];
+		if ([contact isEqual:@"Matthew Perez"]) {
+			return [UIColor redColor];
+		}
+	}
+
+	return [super blue_balloonTextColor];
 }
+*/
 
 /* Personal Theme
 IM Bubbles
@@ -44,65 +95,11 @@ greenish blue, turqois blue?
 - (id)gray_sendButtonColor;
 */
 
-// Recipient
-- (id) gray_balloonColors {
-	if ([Hue useCustomColors]) {
-		NSMutableArray *colors = [[NSMutableArray alloc] init];
-		[colors addObject:[Hue recColor]];
-		return colors;
-	} else {
-		NSMutableArray *colors = [[NSMutableArray alloc] init];
-		[colors addObject:[UIColor grayColor]];
-		return colors;
-	}
-}
-
-- (id) gray_balloonTextColor {
-	return [Hue useCustomColors] ? [Hue recTextColor] : [UIColor whiteColor];
-}
-
-- (id) gray_balloonTextLinkColor {
-	return [self gray_balloonTextColor];
-}
-
-- (id) gray_waveformColor {
-	return [self gray_balloonTextColor];
-}
-
 // For attachment balloons (gray_balloonColors overrides this)
 - (id) gray_unfilledBalloonColor {
 	return [UIColor grayColor];
 }
 
-// SMS
-- (id) green_balloonColors {
-	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
-	return [Hue useCustomColors] ? colorArray : [super green_balloonColors];
-}
-
-- (id) green_balloonTextColor {
-	return [Hue useCustomColors] ? [Hue smsTextColor] : [UIColor whiteColor];
-}
-
-- (id) green_balloonTextLinkColor {
-	return [self green_balloonTextColor];
-}
-
-// White bubbles are the animated ones that you see when send a message
-- (id) white_balloonColors {
-	NSMutableArray *colors = [[NSMutableArray alloc] init];
-	[colors addObject:[self backgroundColor]];
-
-	return colors;
-}
-
-- (id) attachmentBalloonSubtitleTextColor {
-	return [UIColor whiteColor];
-}
-
-- (id) attachmentBalloonTitleTextColor {
-	return [UIColor whiteColor];
-}
 
 // Acknowledgement Bubble (gets overrided if gray_balloonTextColor has a second color) <- ??
 - (id) messageAcknowledgmentPickerBackgroundColor {
@@ -123,10 +120,6 @@ greenish blue, turqois blue?
 	return [UIColor clearColor];
 }
 
-- (id) transcriptBackgroundColor {
-	return [self backgroundColor];
-}
-
 // idk
 // - (id) transcriptDeemphasizedTextColor {
 // 	return [UIColor redColor];
@@ -138,25 +131,15 @@ greenish blue, turqois blue?
 // }
 
 // doesnt do shit
-- (id) stickerDetailsSubheaderTextColor {
-	return [UIColor whiteColor];
-}
-
-// transcript date and delivered text
-- (id) transcriptTextColor {
-	return [UIColor whiteColor];
-}
+// - (id) stickerDetailsSubheaderTextColor {
+// 	return [UIColor whiteColor];
+// }
 
 /*
 - (id)transcriptBigEmojiColor;
 - (id)transcriptNavBarTextColor;
 - (id)transcriptSeparatorColor;
 */
-
-// Background color of the iMessage App launch
-- (id) browserBackgroundColor {
-	return [self backgroundColor];
-}
 
 - (id) browserLabelColor {
 	return [UIColor whiteColor];
@@ -185,17 +168,7 @@ greenish blue, turqois blue?
 // 	return [UIColor clearColor];
 // }
 
-// background of grabber when app is open
-- (id) appGrabberBackgroundColor {
-	return [self backgroundColor];
-}
-
 - (id) appGrabberPillColor {
-	return [UIColor whiteColor];
-}
-
-// full screen title color
-- (id)appGrabberTitleColor {
 	return [UIColor whiteColor];
 }
 
@@ -231,6 +204,15 @@ greenish blue, turqois blue?
 // Text field when composing a new chat
 - (long long) toFieldBackdropStyle {
 	// 1 = dark
+	return 1;
+}
+
+- (long long) navBarStyle {
+	return 1;
+}
+
+
+- (long long) statusBarStyle {
 	return 1;
 }
 
@@ -276,62 +258,6 @@ greenish blue, turqois blue?
 	return 2;
 }
 
-- (id) detailsCellStaticTextColor {
-	return [UIColor whiteColor];
-}
-
-- (id) detailsBackgroundColor {
-	return [self backgroundColor];
-}
-
-// idk
-- (id) contactCellTextColor {
-	return [UIColor whiteColor];
-}
-
-- (id) contactTableViewCellContentTextColor {
-	return [UIColor whiteColor];
-}
-
-- (id) contactTableViewCellBackgroundColor {
-	return [self backgroundColor];
-}
-
-- (id) contactTableViewHeaderBackgroundColor {
-	return [self backgroundColor];
-}
-
-- (id) contactsTableViewBackgroundColor {
-	return [self backgroundColor];
-}
-
-// Conversation List
-- (id) conversationListSenderColor {
-	return [UIColor whiteColor];
-}
-
-- (id) conversationListSummaryColor {
-	return [UIColor whiteColor];
-}
-
-- (id) conversationListDateColor {
-	return [UIColor whiteColor];
-}
-
-- (id) conversationListGroupCountColor {
-	return [UIColor whiteColor];
-}
-
-// also changes the conversationsearchtableview ... thanks apple...
-- (id) conversationListBackgroundColor {
-	return [self backgroundColor];
-}
-
-- (id) conversationListCellColor {
-	// return [Hue enableStyle] ? [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:0.5] : [self backgroundColor];
-	return [self backgroundColor];
-}
-
 // Contact TableView when Composing a new chat
 /*
 - (id)searchResultsBackgroundColor {
@@ -351,24 +277,10 @@ greenish blue, turqois blue?
 }
 */
 
-// This causes the select to delete convo to look messed up
-- (id) conversationListSelectedCellColor {
-	return [Hue useCustomColors] ? [Hue tintColor] : [super conversationListSelectedCellColor];
-}
-
 // what the fuck does this do
 // - (long long) defaultBarStyle {
 // 	return 1;
 // }
-
-- (long long) navBarStyle {
-	return 1;
-}
-
-
-- (long long) statusBarStyle {
-	return 1;
-}
 
 // Conversation audio/facetime/info button color
 - (id) navBarGrayColor {

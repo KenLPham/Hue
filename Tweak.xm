@@ -1,6 +1,5 @@
 #import <UIKit/UIKit.h>
 
-#import "Headers/CKTranscriptCollectionView.h"
 #import "Headers/IMTypingIndicatorLayer.h"
 
 #import "Headers/CKConversationListStandardCell.h"
@@ -35,6 +34,7 @@
 
 /*
 Selecting Conversations to delete messages looks all fucked
+going horizontal in chat then going back makes the navbar go back to white (leave chat window to fix)
 */
 
 %group HueStyle
@@ -269,40 +269,40 @@ UIBackgroundStyleDarkTranslucent
 // Remove if possible
 %hook CKUITheme
 // Tint
-- (id) appTintColor {
-	return [Hue tintColor];
-}
+// - (id) appTintColor {
+// 	return [Hue tintColor];
+// }
 
-// IM Sender
-- (id) blue_balloonColors {
-	return [Hue imSenderColors];
-}
+// // IM Sender
+// - (id) blue_balloonColors {
+// 	return [Hue imSenderColors];
+// }
 
-- (id) blue_balloonTextColor {
-	return [Hue imTextColor];
-}
+// - (id) blue_balloonTextColor {
+// 	return [Hue imTextColor];
+// }
 
-// SMS Sender
-- (id) green_balloonColors {
-	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
-	return colorArray;
-}
+// // SMS Sender
+// - (id) green_balloonColors {
+// 	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
+// 	return colorArray;
+// }
 
-- (id) green_balloonTextColor {
-	return [Hue smsTextColor];
-}
+// - (id) green_balloonTextColor {
+// 	return [Hue smsTextColor];
+// }
 
-// Recipient
-- (id) gray_balloonColors {
-	NSMutableArray *colors = [[NSMutableArray alloc] init];
-	[colors addObject:[Hue recColor]];
+// // Recipient
+// - (id) gray_balloonColors {
+// 	NSMutableArray *colors = [[NSMutableArray alloc] init];
+// 	[colors addObject:[Hue recColor]];
 
-	return colors;
-}
+// 	return colors;
+// }
 
-- (id) gray_balloonTextColor {
-	return [Hue recTextColor];
-}
+// - (id) gray_balloonTextColor {
+// 	return [Hue recTextColor];
+// }
 %end
 
 // Theme Links and App bubbles
@@ -417,6 +417,11 @@ UIBackgroundStyleDarkTranslucent
 // - (bool) isTranslucent {
 // 	return ![[Hue theme] isEqual:@"theme_black"];
 // }
+
+// // Doesnt do anythin
+// // - (long long) _barTranslucence {
+// // 	return 2;
+// // }
 // %end
 
 %end // End of HueBubbles Group
@@ -465,24 +470,18 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 // Dividers
 // [UIColor colorWithRed:(69/255.0) green:(71/255.0) blue:(81/255.0) alpha:1.0];
+
 %group HueContact
+%hook CKConversationListController
+- (void) tableView:(id)arg1 didSelectRowAtIndexPath:(id)arg2 {
+	CKConversationListTableView *convoList = (CKConversationListTableView*)[self view];
+	CKConversationListStandardCell *cell = [convoList cellForRowAtIndexPath:arg2];
+	CKLabel *label = MSHookIvar<CKLabel*>(cell, "_fromLabel");
 
-static NSString *recipient;
+	[Hue setContact:label.text];
+	NSLog(@"[Hue] Opening Chat with %@", [Hue getContact]);
 
-// called after it is set
-%hook CKMessagesController
-// Get name of recipient [SUCCESS]
-- (id) currentConversation {
-	CKConversation *convo = %orig;
-
-	if (convo) {
-		recipient = [convo name];
-		NSLog(@"[Hue] %@", recipient);
-	} else {
-		recipient = nil;
-	}
-
-	return %orig;
+	%orig;
 }
 %end
 
@@ -521,11 +520,7 @@ static NSString *recipient;
 					}
 
 					// Enable HueContact Group
-					if (1 == 0) { // lol
-						%init(HueContact);
-					}
-
-					// %init(HueContact);
+					%init(HueContact);
 
 					// Enable HueStyle Group
 					if ([Hue enableStyle]) {

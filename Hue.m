@@ -88,4 +88,98 @@
 	NSString *fallback = @"2FD63F,3DF74F";
 	return [self senderColors:kSMSSenderColor fallback:fallback];
 }
+
+// Contact Specific
++ (NSString*) formatName:(NSString*)name {
+	// remove emojis
+	NSError *error = nil;
+
+	NSString *emojiPattern1 = @"[\\p{Emoji_Presentation}\\u26F1]"; //Code Points with default emoji representation
+    NSString *emojiPattern2 = @"\\p{Emoji}\\uFE0F"; //Characters with emoji variation selector
+    NSString *emojiPattern3 = @"\\p{Emoji_Modifier_Base}\\p{Emoji_Modifier}"; //Characters with emoji modifier
+    NSString *emojiPattern4 = @"[\\U0001F1E6-\\U0001F1FF][\\U0001F1E6-\\U0001F1FF]"; //2-letter flags
+    NSString *punctuationPattern = @"[.!?\\-'\";:,<>/’()]";
+    NSString *pattern = [NSString stringWithFormat:@"%@|%@|%@|%@|%@", emojiPattern1, emojiPattern2, emojiPattern3, emojiPattern4, punctuationPattern];
+
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
+	NSString *modified = [regex stringByReplacingMatchesInString:name options:0 range:NSMakeRange(0, [name length]) withTemplate:@""];
+
+	// make name all lower case
+	NSString *slammed = [modified lowercaseString];
+
+	// remove spaces
+	NSString *undertaker = [slammed stringByReplacingOccurrencesOfString:@" " withString:@""];
+
+	return undertaker;
+}
+
++ (NSDictionary*) convertToDictionary:(NSString*)jsonString {
+	NSError *error = nil;
+
+	NSData *json = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+	if (json) {
+		NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:0 error:&error];
+
+		return error ? [[NSDictionary alloc] init] : dictionary;
+	}
+	return [[NSDictionary alloc] init];
+}
+
++ (void) setContact:(NSString*)name {
+	// remove emojis
+	NSString *formatted = [self formatName:name];
+
+	// set name
+	currentChat = formatted;
+}
+
++ (NSString*) getContact {
+	return currentChat;
+}
+
+// get json string from storage, then parse it into nsdictionary contactThemes
++ (NSDictionary*) themes {
+	if (!contactThemes) {
+		contactThemes = [NSDictionary dictionaryWithContentsOfFile:kContactsPlistPath] ?: [[NSDictionary alloc] init];
+	}
+	return contactThemes;
+}
+
++ (NSDictionary*) currentTheme {
+	NSString *storedTheme = [[self themes] objectForKey:[self getContact]];
+	// NSLog(@"[Hue] %@ theme: %@", [self getContact], storedTheme);
+
+	currentTheme = [self convertToDictionary:storedTheme];
+	return currentTheme;
+}
+
++ (BOOL) contactHasTheme {
+	if ([self getContact] == nil) { return NO; }
+
+	BOOL hasTheme = [[self currentTheme] count] > 0;
+	BOOL enabled = [[[self currentTheme] valueForKey:@"enabled"] boolValue];
+	return (hasTheme && enabled);
+}
+
++ (NSArray*) contactSenderBubble {
+	NSArray<UIColor*> *colors = [[[self currentTheme] objectForKey:@"sender_gradient"] gradientStringColors];
+	return colors;
+}
+
++ (UIColor*) themeColor:(NSString*)key {
+	NSString *hex = [[self currentTheme] objectForKey:key];
+	return [UIColor colorFromHexString:hex]; 
+}
+
++ (NSArray*) contactRecvrBubble {
+	return @[ [self themeColor:@"recvr_bubble"] ];
+}
+
++ (UIColor*) contactSenderText {
+	return [self themeColor:@"sender_text"];
+}
+
++ (UIColor*) contactRecvrText {
+	return [self themeColor:@"recvr_text"];
+}
 @end

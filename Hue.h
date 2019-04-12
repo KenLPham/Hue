@@ -1,6 +1,8 @@
 #include <CSColorPicker/CSColorPicker.h>
 
 #define kPrefsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.new.plist"
+#define kContactsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.contacts.plist"
+
 #define kPrefsChanged "com.kayfam.hueprefs/settingschanged"
 
 // Settings keys
@@ -34,6 +36,11 @@
 
 static NSDictionary *storage;
 
+// Contact Specific Theme
+static NSString *currentChat = nil;
+static NSDictionary *contactThemes; // plist
+static NSDictionary *currentTheme;
+
 @interface Hue: NSObject
 + (NSDictionary*) dictionary;
 
@@ -51,7 +58,6 @@ static NSDictionary *storage;
 + (BOOL) useIMBubble;
 + (BOOL) useCustomColors;
 
-// + (UIColor*) getColor:(NSString*)key;
 + (UIColor*) getColor:(NSString*)key fallback:(NSString*)fall;
 
 + (UIColor*) tintColor;
@@ -66,4 +72,17 @@ static NSDictionary *storage;
 + (NSArray*) imSenderColors;
 + (NSArray*) smsSenderColors;
 
+// Contact Specific Themes
++ (void) setContact:(NSString*)name;
++ (NSString*) getContact;
+
++ (NSDictionary*) themes;
++ (NSDictionary*) currentTheme;
+
++ (BOOL) contactHasTheme;
+
++ (NSArray*) contactSenderBubble;
++ (UIColor*) contactRecvrBubble;
++ (UIColor*) contactSenderText;
++ (UIColor*) contactRecvrText;
 @end
