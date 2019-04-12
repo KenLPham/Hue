@@ -12,16 +12,12 @@
 			saveValue = saveValue ? [saveValue stringByAppendingFormat:@",%@", color.hexStringWithAlpha] : [NSString stringWithFormat:@"%@", color.hexStringWithAlpha];
 		}
 
-		// UIColor *lastColor = [self.colors lastObject];
-		// [self.specifier setProperty:self.colors forKey:@"colors"];
 		[self.specifier setProperty:saveValue forKey:@"hexValue"];
-		// [self.specifier setProperty:lastColor forKey:@"color"];
 	} else {
 		UIColor *color = [self colorForRGBSliders];
 		saveValue = color.hexStringWithAlpha;
 
 		[self.specifier setProperty:saveValue forKey:@"hexValue"];
-		// [self.specifier setProperty:color forKey:@"color"];
 	}
 
 	// Update color dictionary

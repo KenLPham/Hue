@@ -44,41 +44,6 @@
 
 // MARK: CKUITheme
 
-// TODO: Remove
-/*
-- (id) blue_balloonColors {
-
-	NSString *contact = [Hue getContact];
-	if (contact) {
-		if ([contact containsString:@"Matthew Perez"]) {
-
-			NSMutableArray *colors = [[NSMutableArray alloc] init];
-			[colors addObject:[UIColor blueColor]];
-			[colors addObject:[UIColor purpleColor]];
-			return colors;
-		}
-	}
-
-	return [super blue_balloonColors];
-}
-
-// TODO: Remove
-- (id) blue_balloonTextColor {
-	NSString *contact = [Hue getContact];
-
-	// Works
-	if (contact) {
-		// check name
-
-		if ([contact isEqual:@"Matthew Perez"]) {
-			return [UIColor redColor];
-		}
-	}
-
-	return [super blue_balloonTextColor];
-}
-*/
-
 /* Personal Theme
 IM Bubbles
 Some red color, default purple

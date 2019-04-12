@@ -10,9 +10,9 @@
 @property (nonatomic, retain) CAGradientLayer *gradient;
 @property (nonatomic, retain) NSMutableDictionary *options;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier specifier:(PSSpecifier *)specifier;
-- (void)refreshCellWithColors:(NSArray<UIColor*>*)newColors;
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier specifier:(PSSpecifier *)specifier;
+- (void) refreshCellWithColors:(NSArray<UIColor*>*)newColors;
 
-- (void)openColorPickerView;
+- (void) openColorPickerView;
 
 @end

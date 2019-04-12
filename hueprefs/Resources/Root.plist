@@ -4,7 +4,6 @@
 <dict>
 	<key>items</key>
 	<array>
-
 		<!-- Title -->
 		<dict>
 			<key>cell</key> 				<string>PSGroupCell</string>

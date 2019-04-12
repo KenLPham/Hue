@@ -14,7 +14,7 @@
 @property (nonatomic, retain) NSMutableArray<UIColor*> *colors;
 
 - (UIColor*) colorForRGBSliders;
-- (void)loadColorPickerView;
-- (BOOL)isLandscape;
+- (void) loadColorPickerView;
+- (BOOL) isLandscape;
 
 @end

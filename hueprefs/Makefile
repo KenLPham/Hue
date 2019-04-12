@@ -9,7 +9,7 @@ HuePrefs_INSTALL_PATH = /Library/PreferenceBundles
 HuePrefs_FRAMEWORKS = UIKit
 HuePrefs_PRIVATE_FRAMEWORKS = Preferences
 
-HuePrefs_EXTRA_FRAMEWORKS = CepheiPrefs
+HuePrefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
 HuePrefs_LDFLAGS = -lCSColorPicker
 
 include $(THEOS_MAKE_PATH)/bundle.mk
