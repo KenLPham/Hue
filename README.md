@@ -1,4 +1,4 @@
-# Hue (BETA)
+# Hue
 
 ## Description
 Customize the Messages App with Dark Mode, custom bubble gradients, and transparent background styles!
@@ -9,9 +9,9 @@ Customize the Messages App with Dark Mode, custom bubble gradients, and transpar
 * Gradient Bubbles [Demo 1](https://i.imgur.com/dH7c6gP.png) [Demo 2](https://i.imgur.com/dUmg1VY.png)
 * Has a [heart](https://i.imgur.com/hMBOlNi.jpg)
 * Themes [link bubbles](https://i.imgur.com/3Hq5GL5.png) and [typing indicator](https://i.imgur.com/83R2Pi2.jpg)
+* Contact specific themes
 
 ## Planned Features
-* Contact specific themes
 * Quick Reply support
 * Pin Messages
 * Hide Messages
