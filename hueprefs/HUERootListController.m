@@ -39,6 +39,8 @@
 }
 
 - (void) respring {
+    NSLog(@"[Hue] respring...");
+
     NSTask *task = [[[NSTask alloc] init] autorelease];
     [task setLaunchPath:@"/usr/bin/killall"];
     [task setArguments:@[@"backboardd"]];

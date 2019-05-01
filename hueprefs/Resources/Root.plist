@@ -116,6 +116,14 @@
 		<dict>
 			<key>cell</key> 				<string>PSGroupCell</string>
 		</dict>
+		<!-- Use Skinny Bubbles -->
+		<dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>default</key> 				<false/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
+			<key>key</key> 					<string>skinny_bubbles</string>
+			<key>label</key> 				<string>Outline Bubbles</string>
+		</dict>
 		<!-- Use custom IM colors for SMS -->
 		<dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>

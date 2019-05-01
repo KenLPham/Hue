@@ -2,6 +2,7 @@
 
 #define kPrefsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.new.plist"
 #define kContactsPlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.contacts.plist"
+#define kAttributePlistPath @"/var/mobile/Library/Preferences/com.kayfam.hueprefs.attributes.plist"
 
 #define kPrefsChanged "com.kayfam.hueprefs/settingschanged"
 
@@ -17,6 +18,7 @@
 #define kStyle @"background_style"
 
 // bubble keys
+#define kSkinnyBubble @"skinny_bubbles"
 #define kCopyIMColor @"copy_im"
 #define kCustomBubble @"custom_bubble"
 
@@ -36,13 +38,23 @@
 
 static NSDictionary *storage;
 
+// Notification
+static BOOL isNotif = NO;
+
 // Contact Specific Theme
 static NSString *currentChat = nil;
 static NSDictionary *contactThemes; // plist
 static NSDictionary *currentTheme;
 
+// Pin
+static NSMutableDictionary *chatAttributes;
+
 @interface Hue: NSObject
 + (NSDictionary*) dictionary;
++ (NSDictionary*) attributes;
+
++ (void) setAttribute:(NSString*)name value:(id)attribute;
++ (BOOL) isPinned:(NSString*)name;
 
 + (NSString*) getPrefObject:(NSString*)key;
 + (BOOL) getPrefBool:(NSString*)key;
@@ -55,6 +67,7 @@ static NSDictionary *currentTheme;
 
 + (BOOL) makeTransparent; // not implemented
 
++ (BOOL) useSkinny;
 + (BOOL) useIMBubble;
 + (BOOL) useCustomColors;
 
@@ -66,11 +79,15 @@ static NSDictionary *currentTheme;
 + (UIColor*) smsTextColor;
 + (UIColor*) recTextColor;
 
-+ (UIColor*) recColor;
++ (NSArray*) recColor;
 
 + (NSArray*) senderColors:(NSString*)key fallback:(NSString*)hex;
 + (NSArray*) imSenderColors;
 + (NSArray*) smsSenderColors;
+
+// Notification
++ (void) setInNotif:(BOOL)val;
++ (BOOL) isInNotif;
 
 // Contact Specific Themes
 + (void) setContact:(NSString*)name;
@@ -82,7 +99,7 @@ static NSDictionary *currentTheme;
 + (BOOL) contactHasTheme;
 
 + (NSArray*) contactSenderBubble;
-+ (UIColor*) contactRecvrBubble;
++ (NSArray*) contactRecvrBubble;
 + (UIColor*) contactSenderText;
 + (UIColor*) contactRecvrText;
 @end

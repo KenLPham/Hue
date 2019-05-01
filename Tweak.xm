@@ -31,10 +31,18 @@
 
 // Contact Specific Themes
 #import <ChatKit/CKConversation.h>
+#import "Headers/CKConversationList.h"
+
+// Pin
+// #import "Headers/UITableViewRowAction.h"
 
 /*
-Selecting Conversations to delete messages looks all fucked
-going horizontal in chat then going back makes the navbar go back to white (leave chat window to fix)
+- Selecting Conversations to delete messages looks all fucked
+- going horizontal in chat then going back makes the navbar go back to white (leave chat window to fix)
+- Once and awhile a balloon will use the theme color instead of the user defined one (this is because
+when a contact theme convo is opened first, it will keep that recipient color without updating, even
+though, CKUITheme calls the gray_bubbleColors and it goes to the right color)
+- Apple's pin integration will open the wrong convo if the user clicks on the convo before the compose button is done animating
 */
 
 %group HueStyle
@@ -100,7 +108,6 @@ UIBackgroundStyleDarkTranslucent
 
 // Hide list before seguing
 %hook CKConversationListController
-
 - (void) viewWillAppear:(BOOL)arg1 {
 	%orig;
 	
@@ -229,89 +236,47 @@ UIBackgroundStyleDarkTranslucent
 
 %end // End of HueTheme Group
 
-// %hook CKBalloonView
-// - (bool) isFilled {
-// 	return false;
-// }
+%group HueOutline
 
-// - (bool) hasOverlay {
-// 	return false;
-// }
+// Unfilled bubbles do no work with gradients
+%hook CKColoredBalloonView
+- (bool) isFilled {
+	return NO;
+}
 
-// - (bool) wantsSkinnyMask {
-// 	return false;
-// }
+- (bool) wantsSkinnyMask {
+	return NO;
+}
 
-// - (bool) canUseOpaqueMask {
-// 	return true;
-// }
-//%end
+- (bool) hasBackground {
+	return NO;
+}
 
-// %hook CKColoredBalloonView
-// - (bool) hasBackground {
-// 	return false;
-// }
-// %end
+- (bool) wantsGradient {
+	return NO;
+}
+%end
 
-// Unfilled bubbles do no work for gradients, or invisible ink
-// %hook CKBalloonView
-// - (bool) isFilled { // unfils Spotify bubbles too...
-// 	return false;
-// }
+// fixes app bubbles being invisible
+%hook CKTranscriptPluginColoredBalloonView
+- (bool) isFilled {
+	return YES;
+}
+%end
 
-// - (bool) wantsSkinnyMask {
-// 	return false;
-// }
-// %end
+%end // End of HueOutline Group
 
 %group HueBubbles
-
-// Remove if possible
-%hook CKUITheme
-// Tint
-// - (id) appTintColor {
-// 	return [Hue tintColor];
-// }
-
-// // IM Sender
-// - (id) blue_balloonColors {
-// 	return [Hue imSenderColors];
-// }
-
-// - (id) blue_balloonTextColor {
-// 	return [Hue imTextColor];
-// }
-
-// // SMS Sender
-// - (id) green_balloonColors {
-// 	NSArray *colorArray = [Hue useIMBubble] ? [Hue imSenderColors] : [Hue smsSenderColors];
-// 	return colorArray;
-// }
-
-// - (id) green_balloonTextColor {
-// 	return [Hue smsTextColor];
-// }
-
-// // Recipient
-// - (id) gray_balloonColors {
-// 	NSMutableArray *colors = [[NSMutableArray alloc] init];
-// 	[colors addObject:[Hue recColor]];
-
-// 	return colors;
-// }
-
-// - (id) gray_balloonTextColor {
-// 	return [Hue recTextColor];
-// }
-%end
 
 // Theme Links and App bubbles
 %hook LPTheme
 - (id) backgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
-		return [Hue recColor];
+	if ([Hue contactHasTheme]) {
+		return [[Hue contactRecvrBubble] firstObject];
+	} else if ([Hue useCustomColors]) {
+		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
@@ -326,8 +291,10 @@ UIBackgroundStyleDarkTranslucent
 - (id) mediaBackgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
-		return [Hue recColor];
+	if ([Hue contactHasTheme]) {
+		return [[Hue contactRecvrBubble] firstObject];
+	} else if ([Hue useCustomColors]) {
+		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
@@ -340,8 +307,10 @@ UIBackgroundStyleDarkTranslucent
 - (id) backgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
-		return [Hue recColor];
+	if ([Hue contactHasTheme]) {
+		return [[Hue contactRecvrBubble] firstObject];
+	} else if ([Hue useCustomColors]) {
+		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor lightGrayColor];
 	} else {
@@ -354,7 +323,9 @@ UIBackgroundStyleDarkTranslucent
 - (id) color {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
+	if ([Hue contactHasTheme]) {
+		return [Hue contactRecvrText];
+	} else if ([Hue useCustomColors]) {
 		return [Hue recTextColor];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
@@ -369,8 +340,10 @@ UIBackgroundStyleDarkTranslucent
 - (id) bubbleColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
-		return [Hue recColor];
+	if ([Hue contactHasTheme]) {
+		return [[Hue contactRecvrBubble] firstObject];
+	} else if ([Hue useCustomColors]) {
+		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
 	} else {
@@ -381,7 +354,9 @@ UIBackgroundStyleDarkTranslucent
 - (id) thinkingDotColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue useCustomColors]) {
+	if ([Hue contactHasTheme]) {
+		return [Hue contactRecvrText];
+	} else if ([Hue useCustomColors]) {
 		return [Hue recTextColor];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
@@ -473,8 +448,8 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 %group HueContact
 %hook CKConversationListController
-- (void) tableView:(id)arg1 didSelectRowAtIndexPath:(id)arg2 {
-	CKConversationListTableView *convoList = (CKConversationListTableView*)[self view];
+- (void) tableView:(CKConversationListTableView*)convoList didSelectRowAtIndexPath:(id)arg2 {
+	// CKConversationListTableView *convoList = (CKConversationListTableView*)[self view];
 	CKConversationListStandardCell *cell = [convoList cellForRowAtIndexPath:arg2];
 	CKLabel *label = MSHookIvar<CKLabel*>(cell, "_fromLabel");
 
@@ -490,8 +465,164 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 // %group HueHide
 // %end // End of HueHide group
 
-// %group HuePin
-// %end // End of HuePin group
+%group HuePin
+
+// %hook CKConversationListStandardCell
+// %property (nonatomic, assign, getter=isPinned) BOOL pinned;
+
+// %new
+// - (void) setPinned:(BOOL)pin {
+// 	self.pinned = pin;
+// }
+
+// - (id) init {
+// 	if ((self = %orig)) {
+// 		// self.pinned = NO;
+// 		NSLog(@"[Hue] init called");
+// 		[self setPinned:NO];
+// 	}
+// 	return self;
+// }
+
+// - (id) init {
+// 	self = %orig;
+// 	self.pinned = NO;
+// 	return self;
+// }
+
+// - (void) updateUnreadIndicatorWithImage:(UIImage*)image {
+// 	// CKLabel *label = MSHookIvar<CKLabel*>(self, "_fromLabel");
+// 	// NSString *name = label.text;
+
+// 	if (self.pinned) {
+// 		// NSLog(@"[Hue] %@ cell is pinned", name);
+// 		%orig([UIImage imageNamed:@"Pinned"]);
+// 	} else {
+// 		// NSLog(@"[Hue] %@ cell isnt pinned", name);
+// 		%orig;
+// 	}
+// }
+// %end
+
+@interface CKConversation (Hue)
+@property (getter=isPinned, nonatomic) bool pinned;
+
++ (bool) pinnedConversationsEnabled;
+
+- (bool)isPinned;
+- (void)setPinned:(bool)arg1;
+@end
+
+// %hook CKConversationListStandardCell
+// - (void) updateUnreadIndicatorWithImage:(UIImage*)image {
+// 	// CKLabel *label = MSHookIvar<CKLabel*>(self, "_fromLabel");
+// 	// NSString *name = label.text;
+
+// 	CKConversation *convo = [self conversation];
+
+
+// 	if ([convo isPinned]) {
+// 		// NSLog(@"[Hue] %@ cell is pinned", name);
+// 		%orig([UIImage imageNamed:@"Pinned"]);
+// 	} else {
+// 		// NSLog(@"[Hue] %@ cell isnt pinned", name);
+// 		%orig;
+// 	}
+// }
+// %end
+
+%hook CKConversation
++ (bool) pinnedConversationsEnabled {
+	return YES;
+}
+%end
+
+// ISSUE: Opens wrong chat if user pins convo and tries to open it before the Compose button returns
+// Wait for compose button to return before allowing cells to be pressed
+%hook CKConversationListController
+// - (void) viewDidLoad {
+// 	%orig;
+
+// 	// add long press gesture for hidding?
+// }
+
+// - (id) tableView:(CKConversationListTableView*)table trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath*)index {
+// 	if (@available(iOS 11, *)) {
+// 		NSLog(@"[Hue] adding action");
+// 		UISwipeActionsConfiguration *original = %orig;
+// 		// CKConversationListStandardCell *cell = [table cellForRowAtIndexPath:index];
+// 		// CKLabel *label = MSHookIvar<CKLabel*>(cell, "_fromLabel");
+// 		// NSString *name = label.text;
+
+// 		NSMutableArray *actions = [NSMutableArray arrayWithArray:[original actions]];
+
+// 		// NSIndexPath *newIndex = [NSIndexPath indexPathForRow:0 inSection:2];
+
+// 		// NSArray<CKConversation*> convoList = nonPlaceholderConversations;
+// 		CKConversation *current = [self.nonPlaceholderConversations objectAtIndex:index.row];
+// 		NSString *name = [current name];
+
+// 		// Destroy
+// 		// original = nil;
+// 		// label = nil;
+
+// 		UIContextualActionHandler pinHandler = ^void (UIContextualAction *action, UIView *source, void (^completionHandler)(BOOL actionPerformed)) {
+// 			NSLog(@"[Hue] Pinning %@", name);
+// 			// [Hue setAttribute:name value:@YES];
+// 			// current.pinned = YES;
+// 			[current setPinned:YES];
+// 			// [table moveRowAtIndexPath:index toIndexPath:newIndex];
+// 			// [cell updateUnreadIndicatorWithImage:[UIImage imageNamed:@"Pinned"]];
+// 			completionHandler(YES);
+// 		};
+
+// 		UIContextualActionHandler unpinHandler = ^void (UIContextualAction *action, UIView *source, void (^completionHandler)(BOOL actionPerformed)) {
+// 			NSLog(@"[Hue] Unpinning %@", name);
+// 			// [Hue setAttribute:name value:@NO];
+// 			// current.pinned = NO;
+// 			[current setPinned:NO];
+// 			// [cell updateUnreadIndicatorWithImage:[UIImage imageNamed:@"CKWhatsNewViewBulletPoint_Normal"]];
+// 			completionHandler(YES);
+// 		};
+
+// 		// if ([Hue isPinned:name]) {
+// 		if ([current isPinned]) {
+// 			UIContextualAction *unpinAction = [UIContextualAction contextualActionWithStyle:0 title:@"Unpin" handler:unpinHandler];
+// 			[unpinAction setBackgroundColor:[UIColor orangeColor]];
+// 			[actions addObject:unpinAction];
+// 		} else {
+// 			UIContextualAction *pinAction = [UIContextualAction contextualActionWithStyle:0 title:@"Pin" handler:pinHandler];
+// 			[pinAction setBackgroundColor:[UIColor orangeColor]];
+// 			[actions addObject:pinAction];
+// 		}
+
+// 		UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:actions];
+// 		[config setPerformsFirstActionWithFullSwipe:NO];
+// 		return config;
+// 	}
+// 	return %orig;
+// }
+
+
+- (void) setNonPlaceholderConversations:(NSArray*)convos {
+	NSMutableArray *editable = [NSMutableArray arrayWithArray:convos];
+
+	if ([[Hue attributes] count] > 0) {
+		NSLog(@"[Hue] There are pinned contacts, moving...");
+
+		for (CKConversation *convo in convos) {
+			if ([convo isPinned]) {
+				[editable removeObject:convo];
+				[editable insertObject:convo atIndex:0];
+			}
+		}
+	}
+
+	%orig(editable);
+}
+%end
+
+%end // End of HuePin group
 
 %ctor {
 	@autoreleasepool {
@@ -503,8 +634,11 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 				NSString *processName = [executablePath lastPathComponent];
 				BOOL isSpringBoard = [processName isEqualToString:@"SpringBoard"];
 				BOOL isApplication = [executablePath rangeOfString:@"/Application/"].location != NSNotFound || [executablePath rangeOfString:@"/Applications/"].location != NSNotFound;
+				
+				BOOL isNotif = [processName isEqualToString:@"MessagesNotificationExtension"];
+				BOOL isSMS = [processName isEqualToString:@"MobileSMS"];
 
-				if (((isSpringBoard || isApplication) && [processName isEqualToString:@"MobileSMS"]) && [Hue isEnabled]) {
+				if ((isSpringBoard || isApplication) && (isSMS || isNotif) && [Hue isEnabled]) {
 					NSLog(@"[Hue] Hue is enabled, injecting into MobileSMS");
 
 					// Enable HueTheme Group
@@ -522,8 +656,25 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 					// Enable HueContact Group
 					%init(HueContact);
 
+					// Enable HueOutline Group
+					if ([Hue useSkinny]) {
+						%init(HueOutline);
+					}
+
+					// Enable HuePin Group
+					if (@available(iOS 11, *)) {
+						NSLog(@"On iOS >=11, enabling HuePin Group");
+						%init(HuePin);
+					}
+
+					// Disable HueStyle in Notification
+					if (isNotif) {
+						NSLog(@"[Hue] In Notification");
+						[Hue setInNotif:YES];
+					}
+
 					// Enable HueStyle Group
-					if ([Hue enableStyle]) {
+					if ([Hue enableStyle] && !isNotif) {
 						NSLog(@"[Hue] Background style selected, enabling HueStyle Group");
 						%init(HueStyle);
 					}

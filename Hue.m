@@ -8,6 +8,24 @@
 	return storage;
 }
 
++ (NSMutableDictionary*) attributes {
+	if (!chatAttributes) {
+		// get from a plist <kAttributePlistPath>
+		chatAttributes = [[NSMutableDictionary alloc] init];
+	}
+	return chatAttributes;
+}
+
++ (void) setAttribute:(NSString*)name value:(id)attribute {
+	NSString *key = [self formatName:name];
+	[chatAttributes setObject:attribute forKey:key];
+}
+
++ (BOOL) isPinned:(NSString*)name {
+	NSString *key = [self formatName:name];
+	return [[[self attributes] valueForKey:key] boolValue];
+}
+
 + (NSString*) getPrefObject:(NSString*)key {
 	return [[self dictionary] objectForKey:key];
 }
@@ -36,6 +54,10 @@
 // not implemented
 + (BOOL) makeTransparent {
 	return [self getPrefBool:kPrefsTransparent];
+}
+
++ (BOOL) useSkinny {
+	return [self getPrefBool:kSkinnyBubble];
 }
 
 + (BOOL) useIMBubble {
@@ -67,8 +89,9 @@
 	return [self getColor:kRecTextColor fallback:@"ffffff"];
 }
 
-+ (UIColor*) recColor {
-	return [self getColor:kRecColor fallback:@"aaaaaa"];
++ (NSArray*) recColor {
+	NSArray *colors = [NSArray arrayWithObject:[self getColor:kRecColor fallback:@"aaaaaa"]];
+	return colors;
 }
 
 + (NSArray*) senderColors:(NSString*)key fallback:(NSString*)hex {
@@ -87,6 +110,15 @@
 + (NSArray*) smsSenderColors {
 	NSString *fallback = @"2FD63F,3DF74F";
 	return [self senderColors:kSMSSenderColor fallback:fallback];
+}
+
+// Notification
++ (void) setInNotif:(BOOL)val {
+	isNotif = val;
+}
+
++ (BOOL) isInNotif {
+	return isNotif;
 }
 
 // Contact Specific
@@ -172,7 +204,9 @@
 }
 
 + (NSArray*) contactRecvrBubble {
-	return @[ [self themeColor:@"recvr_bubble"] ];
+	NSArray *colors = [NSArray arrayWithObject:[self themeColor:@"recvr_bubble"]];
+
+	return colors;
 }
 
 + (UIColor*) contactSenderText {

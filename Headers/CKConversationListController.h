@@ -1,2 +1,3 @@
-@interface CKConversationListController: UIViewController
+@interface CKConversationListController : UITableViewController
+@property (nonatomic, retain) NSArray *nonPlaceholderConversations;
 @end

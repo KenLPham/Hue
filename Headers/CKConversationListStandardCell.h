@@ -1,5 +1,6 @@
 @interface CKConversationListStandardCell : UITableViewCell
-	@property (nonatomic, copy, readwrite) UIColor *backgroundColor;
+@property (nonatomic, copy, readwrite) UIColor *backgroundColor;
 
-	- (void) updateUnreadIndicatorWithImage:(UIImageView*)arg1;
+- (void) updateUnreadIndicatorWithImage:(UIImage*)arg1;
+- (id) conversation;
 @end

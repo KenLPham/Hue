@@ -44,7 +44,7 @@
 
 // MARK: Hue Private
 - (id) backgroundColor {
-	return [Hue enableStyle] ? [UIColor clearColor] : [self themeBackground];
+	return [Hue isInNotif] ? [self themeBackground] : ([Hue enableStyle] ? [UIColor clearColor] : [self themeBackground]);
 }
 
 - (id) tintColor {
@@ -97,7 +97,31 @@
 
 // Reciever Bubble
 - (id) gray_balloonColors {
-	return [Hue contactHasTheme] ? [Hue contactRecvrBubble] : ([Hue useCustomColors] ? @[ [Hue recColor] ] : ([self themeRecvrGradient] ?: [super gray_balloonColors]));
+	// Will return the right color, but wont update
+	/*
+	if ([Hue contactHasTheme]) {
+		NSLog(@"[Hue] Has contact theme");
+
+		return [Hue contactRecvrBubble];
+	} else if ([Hue useCustomColors]) {
+		NSLog(@"[Hue] Use Custom Colors");
+
+		return [Hue recColor];
+	} else if ([self themeRecvrGradient]) {
+		NSLog(@"[Hue] Use Theme Colors");
+
+		return [self themeRecvrGradient];
+	} else {
+		NSLog(@"[Hue] Use Default");
+
+		return [super gray_balloonColors];
+	}
+	*/
+
+	// return [Hue contactHasTheme] ? [Hue contactRecvrBubble] : ([Hue useCustomColors] ? [Hue recColor] : ([self themeRecvrGradient] ?: [super gray_balloonColors]));
+
+	// TODO: Reimplement Contact Theme for reciever bubbles
+	return [Hue useCustomColors] ? [Hue recColor] : ([self themeRecvrGradient] ?: [super gray_balloonColors]);
 }
 
 - (id) gray_balloonTextColor {
