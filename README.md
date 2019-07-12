@@ -10,12 +10,12 @@ Customize the Messages App with Dark Mode, custom bubble gradients, and transpar
 * Has a [heart](https://i.imgur.com/hMBOlNi.jpg)
 * Themes [link bubbles](https://i.imgur.com/3Hq5GL5.png) and [typing indicator](https://i.imgur.com/83R2Pi2.jpg)
 * Contact specific themes
-
-## Planned Features
 * Quick Reply support
 * Pin Messages
-* Hide Messages
 * Outline Bubbles
+
+## Planned Features
+* Hide Messages
 * User themes
 * Background image
 
