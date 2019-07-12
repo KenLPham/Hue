@@ -1,4 +1,5 @@
-ARCHS = armv7 arm64
+TARGET = iphone:clang:12.1
+ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
@@ -16,6 +17,5 @@ after-install::
 	install.exec "killall -9 MobileSMS Preferences"
 
 SUBPROJECTS += hueprefs
-HuePrefs_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/aggregate.mk

@@ -96,6 +96,7 @@
 }
 
 // Reciever Bubble
+/** This is called again after leaving a chat. but doesnt do shit... */
 - (id) gray_balloonColors {
 	// Will return the right color, but wont update
 	/*
@@ -120,7 +121,7 @@
 
 	// return [Hue contactHasTheme] ? [Hue contactRecvrBubble] : ([Hue useCustomColors] ? [Hue recColor] : ([self themeRecvrGradient] ?: [super gray_balloonColors]));
 
-	// TODO: Reimplement Contact Theme for reciever bubbles
+	// TODO: Reimplement Contact Theme for reciever bubbles [this does not work]
 	return [Hue useCustomColors] ? [Hue recColor] : ([self themeRecvrGradient] ?: [super gray_balloonColors]);
 }
 

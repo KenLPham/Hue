@@ -8,6 +8,7 @@
 
 // Settings keys
 #define kPrefsEnabled @"enable"
+#define kPinning @"pinning"
 
 // not implemented
 #define kPrefsTransparent @"transparent"
@@ -35,6 +36,7 @@
 #define kBackgroundColor @"bg_color"
 
 #define kTintColor @"tint_color"
+#define kSeparatorColor @"separator_color"
 
 static NSDictionary *storage;
 
@@ -70,10 +72,12 @@ static NSMutableDictionary *chatAttributes;
 + (BOOL) useSkinny;
 + (BOOL) useIMBubble;
 + (BOOL) useCustomColors;
++ (BOOL) enablePin;
 
 + (UIColor*) getColor:(NSString*)key fallback:(NSString*)fall;
 
 + (UIColor*) tintColor;
++ (UIColor*) separatorColor;
 
 + (UIColor*) imTextColor;
 + (UIColor*) smsTextColor;

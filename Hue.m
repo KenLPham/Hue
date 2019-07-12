@@ -21,6 +21,7 @@
 	[chatAttributes setObject:attribute forKey:key];
 }
 
+// - todo: remove
 + (BOOL) isPinned:(NSString*)name {
 	NSString *key = [self formatName:name];
 	return [[[self attributes] valueForKey:key] boolValue];
@@ -68,6 +69,10 @@
 	return [self getPrefBool:kCustomBubble];
 }
 
++ (BOOL) enablePin {
+	return [self getPrefBool:kPinning];
+}
+
 + (UIColor*) getColor:(NSString*)key fallback:(NSString*)fall {
 	NSString *hex = [self getPrefObject:key];
 	return [UIColor colorFromHexString:(hex ?: fall)];
@@ -75,6 +80,10 @@
 
 + (UIColor*) tintColor {
 	return [self getColor:kTintColor fallback:@"007aff"];
+}
+
++ (UIColor*) separatorColor {
+	return [self getColor:kSeparatorColor fallback:@"c7c7cc"];
 }
 
 + (UIColor*) imTextColor {
@@ -158,11 +167,7 @@
 }
 
 + (void) setContact:(NSString*)name {
-	// remove emojis
-	NSString *formatted = [self formatName:name];
-
-	// set name
-	currentChat = formatted;
+	currentChat = name ? [self formatName:name] : nil; // if nil no point in removing emojis
 }
 
 + (NSString*) getContact {
@@ -204,8 +209,7 @@
 }
 
 + (NSArray*) contactRecvrBubble {
-	NSArray *colors = [NSArray arrayWithObject:[self themeColor:@"recvr_bubble"]];
-
+	NSArray<UIColor*> *colors = [NSArray arrayWithObject:[self themeColor:@"recvr_bubble"]];
 	return colors;
 }
 

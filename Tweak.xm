@@ -7,6 +7,7 @@
 #import "Headers/CKColoredBalloonView.h"
 #import "Headers/CKConversationListTableView.h"
 #import "Headers/CKLabel.h"
+#import "Headers/CKTranscriptCollectionViewController.h"
 
 #import "Headers/CKBalloonView.h"
 
@@ -45,6 +46,10 @@ though, CKUITheme calls the gray_bubbleColors and it goes to the right color)
 - Apple's pin integration will open the wrong convo if the user clicks on the convo before the compose button is done animating
 */
 
+/*
+https://stackoverflow.com/questions/3924446/long-press-on-uitableview
+*/
+
 %group HueStyle
 
 /*
@@ -65,7 +70,7 @@ UIBackgroundStyleDarkTranslucent
 		[application _setBackgroundStyle:UIBackgroundStyleTransparent];
 	} else if ([style isEqualToString:@"style_light"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleLightBlur];
-	} else if ([style isEqualToString:@"style_dark"]) {
+	} else if ([style isEqualToString:@"style_dark"]) { // For some reason it is not a dark blur
 		[application _setBackgroundStyle:UIBackgroundStyleDarkBlur];
 	} else if ([style isEqualToString:@"style_tral"]) {
 		[application _setBackgroundStyle:UIBackgroundStyleDarkTranslucent];
@@ -196,6 +201,45 @@ UIBackgroundStyleDarkTranslucent
 }
 %end
 
+/*
+%hook CKNavigationController
+// Set to true if not translucent
+- (BOOL) extendedLayoutIncludesOpaqueBars {
+	return YES;
+}
+%end
+
+%hook CKAvatarNavigationBar
+- (BOOL) isTranslucent {
+	return NO;
+}
+%end
+
+%hook CKMessagesController
+// Set to true if not translucent
+- (BOOL) extendedLayoutIncludesOpaqueBars {
+	return YES;
+}
+%end
+*/
+
+/*
+%hook CKAvatarNavigationBar
+// - (bool) isTranslucent {
+// 	// return ![[Hue theme] isEqual:@"theme_black"];
+// 	return NO;
+// }
+
+// - (id) shadowImage {
+// 	return [[UIImage alloc] init];
+// }
+
+// - (void)_setHidesShadow:(bool)arg1 {
+// 	%orig(YES);
+// }
+%end
+*/
+
 %hook CKMessageEntryView
 // 0 = white, transparent
 // 1 = dark, unreadable, transparent
@@ -209,6 +253,11 @@ UIBackgroundStyleDarkTranslucent
 	} else {
 		%orig;
 	}
+}
+
+- (void) layoutSubviews {
+	%orig;
+	self.contentClipView.backgroundColor = [UIColor clearColor];
 }
 %end
 
@@ -273,9 +322,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) backgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [[Hue contactRecvrBubble] firstObject];
-	} else if ([Hue useCustomColors]) {
+	} else*/ if ([Hue useCustomColors]) {
 		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
@@ -291,9 +342,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) mediaBackgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [[Hue contactRecvrBubble] firstObject];
-	} else if ([Hue useCustomColors]) {
+	} else*/ if ([Hue useCustomColors]) {
 		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
@@ -307,9 +360,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) backgroundColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [[Hue contactRecvrBubble] firstObject];
-	} else if ([Hue useCustomColors]) {
+	} else*/ if ([Hue useCustomColors]) {
 		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor lightGrayColor];
@@ -323,9 +378,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) color {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [Hue contactRecvrText];
-	} else if ([Hue useCustomColors]) {
+	} else*/ if ([Hue useCustomColors]) {
 		return [Hue recTextColor];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
@@ -340,9 +397,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) bubbleColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [[Hue contactRecvrBubble] firstObject];
-	} else if ([Hue useCustomColors]) {
+	} else */ if ([Hue useCustomColors]) {
 		return [[Hue recColor] firstObject];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor grayColor];
@@ -354,9 +413,11 @@ UIBackgroundStyleDarkTranslucent
 - (id) thinkingDotColor {
 	NSString *theme = [Hue theme];
 
-	if ([Hue contactHasTheme]) {
+	// TODO: Reimplement Contact Theme for reciever bubbles [these work fine]
+
+	/*if ([Hue contactHasTheme]) {
 		return [Hue contactRecvrText];
-	} else if ([Hue useCustomColors]) {
+	} else*/ if ([Hue useCustomColors]) {
 		return [Hue recTextColor];
 	} else if ([theme isEqual:@"theme_dark"] || [theme isEqual:@"theme_black"]) {
 		return [UIColor whiteColor];
@@ -387,17 +448,22 @@ UIBackgroundStyleDarkTranslucent
 }
 %end
 
-// ISSUE: Fucks up animation
-// %hook UINavigationBar
-// - (bool) isTranslucent {
-// 	return ![[Hue theme] isEqual:@"theme_black"];
-// }
+%hook CKConversationListController
+-(void) viewDidLoad {
+	%orig;
 
-// // Doesnt do anythin
-// // - (long long) _barTranslucence {
-// // 	return 2;
-// // }
-// %end
+	// [self.navigationController.navigationBar setTranslucent:NO];
+	// self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
+	// self.extendedLayoutIncludesOpaqueBars = YES;
+}
+%end
+
+%hook CKTranscriptCollectionViewController
+- (void) viewDidLoad {
+	%orig;
+	// self.extendedLayoutIncludesOpaqueBars = NO;
+}
+%end
 
 %end // End of HueBubbles Group
 
@@ -449,7 +515,6 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 %group HueContact
 %hook CKConversationListController
 - (void) tableView:(CKConversationListTableView*)convoList didSelectRowAtIndexPath:(id)arg2 {
-	// CKConversationListTableView *convoList = (CKConversationListTableView*)[self view];
 	CKConversationListStandardCell *cell = [convoList cellForRowAtIndexPath:arg2];
 	CKLabel *label = MSHookIvar<CKLabel*>(cell, "_fromLabel");
 
@@ -459,6 +524,23 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 	%orig;
 }
 %end
+
+%hook CKTranscriptCollectionViewController
+- (void) viewWillAppear:(BOOL)arg1 {
+	%orig;
+
+	// NSLog(@"[Hue] Appearing... reload the bad boi");
+	// [self.collectionView reloadData];
+	// [self reloadData];
+	// [self.collectionView layoutSubviews];
+}
+%end
+
+// %hook CKTranscriptCollectionView
+// - (bool) dynamicsDisabled {
+// 	return NO;
+// }
+// %end
 
 %end // End of HueContact group
 
@@ -603,7 +685,9 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 // 	return %orig;
 // }
 
+// navigationItem.rightBarButtonItem
 
+/*
 - (void) setNonPlaceholderConversations:(NSArray*)convos {
 	NSMutableArray *editable = [NSMutableArray arrayWithArray:convos];
 
@@ -620,9 +704,17 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 	%orig(editable);
 }
+*/
 %end
 
 %end // End of HuePin group
+
+// Groupless
+%hook CKConversationListTableView
+- (id) separatorColor {
+	return [Hue separatorColor];
+}
+%end
 
 %ctor {
 	@autoreleasepool {
@@ -641,6 +733,8 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 				if ((isSpringBoard || isApplication) && (isSMS || isNotif) && [Hue isEnabled]) {
 					NSLog(@"[Hue] Hue is enabled, injecting into MobileSMS");
 
+					%init; // Enable groupless (Seperator color)
+
 					// Enable HueTheme Group
 					if (![[Hue theme] containsString:@"theme_stock"] || [Hue enableStyle]) {
 						NSLog(@"[Hue] Isn't using Stock theme, enabling HueTheme Group");
@@ -658,13 +752,16 @@ static UIColor *bgColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.11 alpha:
 
 					// Enable HueOutline Group
 					if ([Hue useSkinny]) {
+						NSLog(@"[Hue] Outline bubbles");
 						%init(HueOutline);
 					}
 
 					// Enable HuePin Group
 					if (@available(iOS 11, *)) {
-						NSLog(@"On iOS >=11, enabling HuePin Group");
-						%init(HuePin);
+						if ([Hue enablePin]) {
+							NSLog(@"[Hue] Enabling Pinning");
+							%init(HuePin);
+						}
 					}
 
 					// Disable HueStyle in Notification

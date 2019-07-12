@@ -21,12 +21,20 @@
 		<dict>
 			<key>cell</key> 				<string>PSGroupCell</string>
 			<key>label</key> 				<string>Settings</string>
+			<key>footerText</key> 			<string>Pinnable Chats are only available on >= iOS11. Warning: If you pin a chat and click on a chat too quickly it could open the wrong conversation!</string>
 		</dict>
 		<!-- Enable Tweak -->
 		<dict>
 			<key>cell</key> 				<string>PSSwitchCell</string>
 			<key>key</key> 					<string>enable</string>
 			<key>label</key> 				<string>Enabled</string>
+			<key>default</key> 				<false/>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
+		</dict>
+		<dict>
+			<key>cell</key> 				<string>PSSwitchCell</string>
+			<key>key</key> 					<string>pinning</string>
+			<key>label</key> 				<string>Enable Pinnable Chats (BETA)</string>
 			<key>default</key> 				<false/>
 			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
 		</dict>
@@ -105,12 +113,16 @@
 			<key>fallback</key> 			<string>007aff</string>
 			<key>alpha</key> 				<false/>
 		</dict>
-		<!-- <dict>
+		<!-- Separator Color -->
+		<dict>
 			<key>cell</key> 				<string>PSLinkCell</string>
-			<key>label</key> 				<string>Tint Color</string>
-			<key>detail</key> 				<string>SelectorController</string>
-			<key>HUETint</key> 				<string>TintView</string>
-		</dict> -->
+			<key>cellClass</key> 			<string>CSColorDisplayCell</string>
+			<key>defaults</key> 			<string>com.kayfam.hueprefs.new</string>
+			<key>key</key> 					<string>separator_color</string>
+			<key>label</key> 				<string>Separator Color</string>
+			<key>fallback</key> 			<string>c7c7cc</string>
+			<key>alpha</key> 				<true/>
+		</dict>
 
 		<!-- Split Bubble Settings -->
 		<dict>
